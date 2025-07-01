@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js';
-import type { Song } from '../../../types/song';
+import type { Song, Artist } from '../../../types/song';
 import type { SearchOptions, SearchResult, LanguagePreference } from '../types';
 import { normalizeForSearch, normalizeArrayForSearch, safeNormalizeForSearch } from '../utils/normalization';
 
@@ -33,24 +33,79 @@ interface NormalizedSong extends Song {
   };
 }
 
+// Interface for normalized artist data used by Fuse.js
+interface NormalizedArtist extends Artist {
+  _normalized: {
+    name: {
+      original: string;
+      japanese?: {
+        main: string;
+        aliases: string[];
+      };
+      english?: {
+        main: string;
+        aliases: string[];
+      };
+      korean?: {
+        main: string;
+        aliases: string[];
+      };
+    };
+    id: string;
+  };
+}
+
 export class SearchService {
-  private fuse: Fuse<NormalizedSong> | null = null;
+  private songFuse: Fuse<NormalizedSong> | null = null;
+  private artistFuse: Fuse<NormalizedArtist> | null = null;
   private songs: Song[] = [];
+  private artists: Artist[] = [];
   private normalizedSongs: NormalizedSong[] = [];
+  private normalizedArtists: NormalizedArtist[] = [];
   private artistsMap: Map<string, any> = new Map();
 
   constructor(songs: Song[] = []) {
     this.setSongs(songs);
   }
 
-  setSongs(songs: Song[], artists: any[] = []) {
+  setSongs(songs: Song[], artists: Artist[] = []) {
     this.songs = songs;
+    this.artists = artists;
     
     // Create a map of artist ID to artist data for quick lookup
     this.artistsMap = new Map(artists.map(artist => [artist.id, artist]));
     
     this.normalizedSongs = this.createNormalizedSongs(songs);
+    this.normalizedArtists = this.createNormalizedArtists(artists);
     this.initializeFuse();
+  }
+
+  private createNormalizedArtists(artists: Artist[]): NormalizedArtist[] {
+    return artists.map(artist => {
+      const normalizedArtist: NormalizedArtist = {
+        ...artist,
+        _normalized: {
+          name: {
+            original: normalizeForSearch(artist.name.original),
+            japanese: artist.name.japanese ? {
+              main: normalizeForSearch(artist.name.japanese.main),
+              aliases: normalizeArrayForSearch(artist.name.japanese.aliases?.map(alias => alias.text) || []),
+            } : undefined,
+            english: artist.name.english ? {
+              main: normalizeForSearch(artist.name.english.main),
+              aliases: normalizeArrayForSearch(artist.name.english.aliases?.map(alias => alias.text) || []),
+            } : undefined,
+            korean: artist.name.korean ? {
+              main: normalizeForSearch(artist.name.korean.main),
+              aliases: normalizeArrayForSearch(artist.name.korean.aliases?.map(alias => alias.text) || []),
+            } : undefined,
+          },
+          id: normalizeForSearch(artist.id),
+        },
+      };
+
+      return normalizedArtist;
+    });
   }
 
   private createNormalizedSongs(songs: Song[]): NormalizedSong[] {
@@ -131,7 +186,8 @@ export class SearchService {
   }
 
   private initializeFuse() {
-    const fuseOptions = {
+    // Song search configuration
+    const songFuseOptions = {
       keys: [
         { name: '_normalized.title.original', weight: 2 },
         { name: '_normalized.title.japanese.main', weight: 2 },
@@ -154,43 +210,75 @@ export class SearchService {
       minMatchCharLength: 2,
     };
 
-    this.fuse = new Fuse(this.normalizedSongs, fuseOptions);
+    // Artist search configuration
+    const artistFuseOptions = {
+      keys: [
+        { name: '_normalized.name.original', weight: 2 },
+        { name: '_normalized.name.japanese.main', weight: 2 },
+        { name: '_normalized.name.japanese.aliases', weight: 1.5 },
+        { name: '_normalized.name.english.main', weight: 2 },
+        { name: '_normalized.name.english.aliases', weight: 1.5 },
+        { name: '_normalized.name.korean.main', weight: 2 },
+        { name: '_normalized.name.korean.aliases', weight: 1.5 },
+        { name: '_normalized.id', weight: 1 },
+      ],
+      threshold: 0.3,
+      includeScore: true,
+      includeMatches: true,
+      minMatchCharLength: 2,
+    };
+
+    this.songFuse = new Fuse(this.normalizedSongs, songFuseOptions);
+    this.artistFuse = new Fuse(this.normalizedArtists, artistFuseOptions);
   }
 
   search(options: SearchOptions): SearchResult {
-    if (!this.fuse || this.normalizedSongs.length === 0) {
+    if ((!this.songFuse || this.normalizedSongs.length === 0) && (!this.artistFuse || this.normalizedArtists.length === 0)) {
       return {
         songs: [],
+        artists: [],
         total: 0,
         query: options.query,
       };
     }
 
-    let results: Song[] = [];
+    let songResults: Song[] = [];
+    let artistResults: Artist[] = [];
 
     if (options.query.trim()) {
       // Normalize the search query using NFKD
       const normalizedQuery = normalizeForSearch(options.query);
       
-      // Perform fuzzy search with normalized query
-      const fuseResults = this.fuse.search(normalizedQuery, {
-        limit: options.limit || 50,
-      });
-      
-      results = fuseResults.map(result => result.item);
+      // Search songs
+      if (this.songFuse) {
+        const songFuseResults = this.songFuse.search(normalizedQuery, {
+          limit: options.limit || 50,
+        });
+        songResults = songFuseResults.map(result => result.item);
+      }
+
+      // Search artists
+      if (this.artistFuse) {
+        const artistFuseResults = this.artistFuse.search(normalizedQuery, {
+          limit: 10, // Limit artist results to keep UI manageable
+        });
+        artistResults = artistFuseResults.map(result => result.item);
+      }
     } else {
-      // Return all songs if no query
-      results = this.songs.slice(0, options.limit || 50);
+      // Return all songs and artists if no query
+      songResults = this.songs.slice(0, options.limit || 50);
+      artistResults = this.artists.slice(0, 10);
     }
 
-    // Apply filters
+    // Apply filters to songs
     if (options.filters) {
-      results = this.applyFilters(results, options.filters);
+      songResults = this.applyFilters(songResults, options.filters);
     }
 
     return {
-      songs: results,
-      total: results.length,
+      songs: songResults,
+      artists: artistResults,
+      total: songResults.length + artistResults.length,
       query: options.query,
     };
   }

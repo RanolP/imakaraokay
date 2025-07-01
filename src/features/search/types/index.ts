@@ -1,4 +1,4 @@
-import type { Song } from '../../../types/song';
+import type { Song, Artist } from '../../../types/song';
 
 export interface SearchOptions {
   query: string;
@@ -11,6 +11,7 @@ export interface SearchOptions {
 
 export interface SearchResult {
   songs: Song[];
+  artists: Artist[];
   total: number;
   query: string;
 }

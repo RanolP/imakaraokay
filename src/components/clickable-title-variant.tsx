@@ -210,7 +210,7 @@ const ClickableTitleVariant: Component<ClickableTitleVariantProps> = (props) => 
       <Show when={isOpen() && hasMultipleOptions()}>
         <div
           ref={dropdownRef}
-          class="fixed z-50 bg-white dark:bg-gray-800 min-w-64 max-w-80 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+          class="fixed z-50 bg-white dark:bg-gray-200 min-w-64 max-w-80 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
           style={{ position: 'absolute' }}
         >
           {getAvailableOptions().map((option) => (
