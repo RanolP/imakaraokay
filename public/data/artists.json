@@ -1,0 +1,66 @@
+[
+  {
+    "id": "yoasobi",
+    "name": {
+      "original": "YOASOBI",
+      "japanese": {
+        "main": "ヨアソビ",
+        "aliases": ["よあそび"]
+      },
+      "english": {
+        "main": "YOASOBI"
+      }
+    },
+    "songs": ["yoru-ni-kakeru"],
+    "songCount": 1
+  },
+  {
+    "id": "lisa",
+    "name": {
+      "original": "LiSA",
+      "japanese": {
+        "main": "リサ",
+        "aliases": ["りさ"]
+      },
+      "english": {
+        "main": "LiSA"
+      }
+    },
+    "songs": ["gurenge"],
+    "songCount": 1
+  },
+  {
+    "id": "kenshi-yonezu",
+    "name": {
+      "original": "米津玄師",
+      "japanese": {
+        "main": "米津玄師",
+        "aliases": ["よねづけんし"]
+      },
+      "english": {
+        "main": "Kenshi Yonezu"
+      }
+    },
+    "songs": ["lemon"],
+    "songCount": 1
+  },
+  {
+    "id": "bts",
+    "name": {
+      "original": "BTS",
+      "japanese": {
+        "main": "ビーティーエス",
+        "aliases": ["びーてぃーえす"]
+      },
+      "english": {
+        "main": "BTS"
+      },
+      "korean": {
+        "main": "방탄소년단",
+        "aliases": ["BTS", "Bangtan Boys"]
+      }
+    },
+    "songs": ["dynamite"],
+    "songCount": 1
+  }
+] 

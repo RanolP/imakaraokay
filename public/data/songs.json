@@ -1,0 +1,96 @@
+[
+  {
+    "id": "yoru-ni-kakeru",
+    "title": {
+      "original": "夜に駆ける",
+      "japanese": {
+        "main": "夜に駆ける",
+        "aliases": ["よるにかける"]
+      },
+      "english": {
+        "main": "Racing into the Night",
+        "aliases": ["Running into the Night"]
+      },
+      "korean": {
+        "main": "밤을 달리다"
+      }
+    },
+    "artists": ["yoasobi"],
+    "karaoke": {
+      "tj": "68321",
+      "ky": "44629",
+      "joysound": "452935"
+    },
+    "releaseDate": "2019-12-15",
+    "lyrics": "沈むように溶けてゆくように\n二人だけの空が広がる夜に\n「さよなら」だけだった\nその一言で全てが変わった"
+  },
+  {
+    "id": "gurenge",
+    "title": {
+      "original": "紅蓮華",
+      "japanese": {
+        "main": "紅蓮華",
+        "aliases": ["ぐれんげ"]
+      },
+      "english": {
+        "main": "Gurenge",
+        "aliases": ["Red Lotus"]
+      }
+    },
+    "artists": ["lisa"],
+    "karaoke": {
+      "tj": "68420",
+      "ky": "45210",
+      "ebo": "12450",
+      "joysound": "463821"
+    },
+    "releaseDate": "2019-07-03",
+    "lyrics": "強くなれる理由を知った\n僕を連れて進め"
+  },
+  {
+    "id": "lemon",
+    "title": {
+      "original": "Lemon",
+      "japanese": {
+        "main": "レモン",
+        "aliases": ["れもん"]
+      },
+      "english": {
+        "main": "Lemon"
+      }
+    },
+    "artists": ["kenshi-yonezu"],
+    "karaoke": {
+      "tj": "67890",
+      "ky": "43521",
+      "joysound": "441203"
+    },
+    "releaseDate": "2018-02-12",
+    "lyrics": "夢ならばどれほどよかったでしょう\n未だにあなたのことを夢にみる"
+  },
+  {
+    "id": "dynamite",
+    "title": {
+      "original": "Dynamite",
+      "japanese": {
+        "main": "ダイナマイト",
+        "aliases": ["だいなまいと"]
+      },
+      "english": {
+        "main": "Dynamite"
+      },
+      "korean": {
+        "main": "다이너마이트"
+      }
+    },
+    "artists": ["bts"],
+    "karaoke": {
+      "tj": "69001",
+      "ky": "46120",
+      "ebo": "13001",
+      "joysound": "471203"
+    },
+    "releaseDate": "2020-08-21",
+    "lyrics": "'Cause I, I, I'm in the stars tonight\nSo watch me bring the fire and set the night alight"
+  }
+] 
