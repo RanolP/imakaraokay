@@ -98,47 +98,50 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
                 {t('home.searchResults')} ({searchResults().total} found)
               </h2>
               
-              {/* Artist Results */}
-              <Show when={searchResults().artists.length > 0}>
-                <div class="mb-6">
-                  <h3 class="text-lg font-semibold mb-3 text-gray-300">
-                    Artists ({searchResults().artists.length})
-                  </h3>
-                  <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <For each={searchResults().artists}>
-                      {(artist) => (
-                        <a
-                          href={`/artists/${artist.id}`}
-                          class="block border-b border-gray-100 last:border-b-0"
-                        >
-                          <ArtistListItem artist={artist} />
-                        </a>
-                      )}
-                    </For>
+              {/* Responsive grid layout for side-by-side on wider screens */}
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Song Results - Show first and take more space */}
+                <Show when={searchResults().songs.length > 0}>
+                  <div class="lg:col-span-1 lg:order-1">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-200">
+                      Songs ({searchResults().songs.length})
+                    </h3>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                      <For each={searchResults().songs}>
+                        {(song) => (
+                          <a
+                            href={`/songs/${song.id}`}
+                            class="block border-b border-gray-100 last:border-b-0"
+                          >
+                            <SongListItem song={song} />
+                          </a>
+                        )}
+                      </For>
+                    </div>
                   </div>
-                </div>
-              </Show>
+                </Show>
 
-              {/* Song Results */}
-              <Show when={searchResults().songs.length > 0}>
-                <div class="mb-6">
-                  <h3 class="text-lg font-semibold mb-3 text-gray-200">
-                    Songs ({searchResults().songs.length})
-                  </h3>
-                  <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <For each={searchResults().songs}>
-                      {(song) => (
-                        <a
-                          href={`/songs/${song.id}`}
-                          class="block border-b border-gray-100 last:border-b-0"
-                        >
-                          <SongListItem song={song} />
-                        </a>
-                      )}
-                    </For>
+                {/* Artist Results - Show second */}
+                <Show when={searchResults().artists.length > 0}>
+                  <div class="lg:col-span-1 lg:order-2">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-300">
+                      Artists ({searchResults().artists.length})
+                    </h3>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                      <For each={searchResults().artists}>
+                        {(artist) => (
+                          <a
+                            href={`/artists/${artist.id}`}
+                            class="block border-b border-gray-100 last:border-b-0"
+                          >
+                            <ArtistListItem artist={artist} />
+                          </a>
+                        )}
+                      </For>
+                    </div>
                   </div>
-                </div>
-              </Show>
+                </Show>
+              </div>
             </div>
           </Show>
 
