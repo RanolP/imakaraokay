@@ -1,0 +1,28 @@
+{
+  "id": "gurenge",
+  "title": {
+    "original": "紅蓮華",
+    "japanese": {
+      "main": "紅蓮華",
+      "aliases": [
+        { "text": "ぐれんげ" }
+      ]
+    },
+    "english": {
+      "main": "Gurenge",
+      "aliases": [
+        { "text": "Red Lotus" },
+        { "text": "Internal Dev Name", "hidden": true }
+      ]
+    }
+  },
+  "artists": ["lisa"],
+  "karaoke": {
+    "tj": "68420",
+    "ky": "45210",
+    "ebo": "12450",
+    "joysound": "463821"
+  },
+  "releaseDate": "2019-07-03",
+  "lyrics": "強くなれる理由を知った\n僕を連れて進め"
+} 

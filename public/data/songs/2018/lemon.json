@@ -1,0 +1,23 @@
+{
+  "id": "lemon",
+  "title": {
+    "original": "Lemon",
+    "japanese": {
+      "main": "レモン",
+      "aliases": [
+        { "text": "れもん" }
+      ]
+    },
+    "english": {
+      "main": "Lemon"
+    }
+  },
+  "artists": ["kenshi-yonezu"],
+  "karaoke": {
+    "tj": "67890",
+    "ky": "43521",
+    "joysound": "441203"
+  },
+  "releaseDate": "2018-02-12",
+  "lyrics": "夢ならばどれほどよかったでしょう\n未だにあなたのことを夢にみる"
+} 

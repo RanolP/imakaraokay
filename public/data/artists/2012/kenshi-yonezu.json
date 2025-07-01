@@ -1,0 +1,18 @@
+{
+  "id": "kenshi-yonezu",
+  "name": {
+    "original": "米津玄師",
+    "japanese": {
+      "main": "米津玄師",
+      "aliases": [
+        { "text": "よねづけんし" }
+      ]
+    },
+    "english": {
+      "main": "Kenshi Yonezu"
+    }
+  },
+  "songs": ["lemon"],
+  "songCount": 1,
+  "debutDate": "2012-05-16"
+} 

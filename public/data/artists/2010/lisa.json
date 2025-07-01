@@ -1,0 +1,18 @@
+{
+  "id": "lisa",
+  "name": {
+    "original": "LiSA",
+    "japanese": {
+      "main": "リサ",
+      "aliases": [
+        { "text": "りさ" }
+      ]
+    },
+    "english": {
+      "main": "LiSA"
+    }
+  },
+  "songs": ["gurenge"],
+  "songCount": 1,
+  "debutDate": "2010-04-21"
+} 

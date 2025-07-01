@@ -1,0 +1,26 @@
+{
+  "id": "bts",
+  "name": {
+    "original": "BTS",
+    "japanese": {
+      "main": "ビーティーエス",
+      "aliases": [
+        { "text": "びーてぃーえす" }
+      ]
+    },
+    "english": {
+      "main": "BTS"
+    },
+    "korean": {
+      "main": "방탄소년단",
+      "aliases": [
+        { "text": "BTS" },
+        { "text": "Bangtan Boys" },
+        { "text": "Internal Korean Ref", "hidden": true }
+      ]
+    }
+  },
+  "songs": ["dynamite"],
+  "songCount": 1,
+  "debutDate": "2013-06-13"
+} 

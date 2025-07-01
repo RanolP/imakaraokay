@@ -1,0 +1,18 @@
+{
+  "id": "yoasobi",
+  "name": {
+    "original": "YOASOBI",
+    "japanese": {
+      "main": "ヨアソビ",
+      "aliases": [
+        { "text": "よあそび" }
+      ]
+    },
+    "english": {
+      "main": "YOASOBI"
+    }
+  },
+  "songs": ["yoru-ni-kakeru"],
+  "songCount": 1,
+  "debutDate": "2019-11-16"
+} 

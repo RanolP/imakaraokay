@@ -1,0 +1,29 @@
+{
+  "id": "yoru-ni-kakeru",
+  "title": {
+    "original": "夜に駆ける",
+    "japanese": {
+      "main": "夜に駆ける",
+      "aliases": [
+        { "text": "よるにかける", "hidden": true }
+      ]
+    },
+    "english": {
+      "main": "Racing into the Night",
+      "aliases": [
+        { "text": "Running into the Night" }
+      ]
+    },
+    "korean": {
+      "main": "밤을 달리다"
+    }
+  },
+  "artists": ["yoasobi"],
+  "karaoke": {
+    "tj": "68321",
+    "ky": "44629",
+    "joysound": "452935"
+  },
+  "releaseDate": "2019-12-15",
+  "lyrics": "沈むように溶けてゆくように\n二人だけの空が広がる夜に\n「さよなら」だけだった\nその一言で全てが変わった"
+} 

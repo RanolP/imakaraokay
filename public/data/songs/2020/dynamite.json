@@ -1,0 +1,27 @@
+{
+  "id": "dynamite",
+  "title": {
+    "original": "Dynamite",
+    "japanese": {
+      "main": "ダイナマイト",
+      "aliases": [
+        { "text": "だいなまいと" }
+      ]
+    },
+    "english": {
+      "main": "Dynamite"
+    },
+    "korean": {
+      "main": "다이너마이트"
+    }
+  },
+  "artists": ["bts"],
+  "karaoke": {
+    "tj": "69001",
+    "ky": "46120",
+    "ebo": "13001",
+    "joysound": "471203"
+  },
+  "releaseDate": "2020-08-21",
+  "lyrics": "'Cause I, I, I'm in the stars tonight\nSo watch me bring the fire and set the night alight"
+} 

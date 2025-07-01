@@ -92,4 +92,9 @@ export interface Artist {
    * The number of songs
    */
   songCount: number;
+
+  /**
+   * The debut date in ISO format
+   */
+  debutDate?: string;
 }

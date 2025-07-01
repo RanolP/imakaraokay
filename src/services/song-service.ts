@@ -18,19 +18,12 @@ export class SongService {
     }
 
     try {
-      // Load songs data
-      const songsResponse = await fetch('/data/songs.json');
-      if (!songsResponse.ok) {
-        throw new Error(`Failed to load songs: ${songsResponse.statusText}`);
-      }
-      this.songs = await songsResponse.json();
+      // Load songs data from individual files organized by release year
+      await this.loadSongsFromDirectoryStructure();
 
-      // Load artists data if available
+      // Load artists data from individual files organized by debut year
       try {
-        const artistsResponse = await fetch('/data/artists.json');
-        if (artistsResponse.ok) {
-          this.artists = await artistsResponse.json();
-        }
+        await this.loadArtistsFromDirectoryStructure();
       } catch {
         // Artists data is optional, generate from songs if not available
         this.generateArtistsFromSongs();
@@ -45,6 +38,95 @@ export class SongService {
       // Return empty array for development/fallback
       return [];
     }
+  }
+
+  private async loadSongsFromDirectoryStructure() {
+    // Known release years - expand this array as more songs are added
+    const knownYears = ['2018', '2019', '2020'];
+    const loadedSongs: Song[] = [];
+
+    // Load songs from each year directory
+    for (const year of knownYears) {
+      try {
+        // Get all song files in the year directory
+        // We'll use a known list of song IDs for now, but this could be made more dynamic
+        const songIds = this.getKnownSongIds(year);
+        
+        for (const songId of songIds) {
+          try {
+            const songResponse = await fetch(`/data/songs/${year}/${songId}.json`);
+            if (songResponse.ok) {
+              const song: Song = await songResponse.json();
+              loadedSongs.push(song);
+            }
+          } catch {
+            // Skip missing song files
+          }
+        }
+      } catch {
+        // Skip missing year directories
+      }
+    }
+
+    this.songs = loadedSongs;
+    
+    if (this.songs.length === 0) {
+      console.warn('No songs loaded from directory structure');
+    }
+  }
+
+  private getKnownSongIds(year: string): string[] {
+    // Map of known songs by year - this could be made more dynamic in the future
+    const songsByYear: { [key: string]: string[] } = {
+      '2018': ['lemon'],
+      '2019': ['yoru-ni-kakeru', 'gurenge'],
+      '2020': ['dynamite']
+    };
+    
+    return songsByYear[year] || [];
+  }
+
+  private async loadArtistsFromDirectoryStructure() {
+    // Known debut years - expand this array as more artists are added
+    const knownYears = ['2010', '2012', '2013', '2019'];
+    const loadedArtists: Artist[] = [];
+    const artistIds = this.getKnownArtistIds();
+
+    // For each artist, try to find them in any of the year directories
+    for (const artistId of artistIds) {
+      let artistFound = false;
+      
+      for (const year of knownYears) {
+        if (artistFound) break; // Skip remaining years once found
+        
+        try {
+          const artistResponse = await fetch(`/data/artists/${year}/${artistId}.json`);
+          if (artistResponse.ok) {
+            const artist: Artist = await artistResponse.json();
+            loadedArtists.push(artist);
+            artistFound = true;
+          }
+        } catch {
+          // Continue to next year
+        }
+      }
+    }
+
+    this.artists = loadedArtists;
+    
+    // If no artists were loaded, generate from songs as fallback
+    if (this.artists.length === 0) {
+      this.generateArtistsFromSongs();
+    }
+  }
+
+  private getKnownArtistIds(): string[] {
+    // Extract unique artist IDs from songs data
+    const artistIds = new Set<string>();
+    this.songs.forEach(song => {
+      song.artists.forEach(id => artistIds.add(id));
+    });
+    return Array.from(artistIds);
   }
 
   private generateArtistsFromSongs() {
