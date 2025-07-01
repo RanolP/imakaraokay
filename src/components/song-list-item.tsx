@@ -46,7 +46,7 @@ const SongListItem: Component<SongListItemProps> = (props) => {
         return (
           <a
             href={`/artists/${artistId}`}
-            class="text-blue-600 hover:underline"
+            class="text-gray-700 hover:text-gray-900 hover:underline"
             rel="noopener"
             tabIndex={0}
           >

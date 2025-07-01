@@ -111,7 +111,7 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
                         {(song) => (
                           <a
                             href={`/songs/${song.id}`}
-                            class="block border-b border-gray-100 last:border-b-0"
+                            class="block border-b border-gray-100 last:border-b-0 text-inherit no-underline"
                           >
                             <SongListItem song={song} />
                           </a>
@@ -168,7 +168,7 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
                   {(song) => (
                     <a
                       href={`/songs/${song.id}`}
-                      class="block border-b border-gray-100 last:border-b-0"
+                      class="block border-b border-gray-100 last:border-b-0 text-inherit no-underline"
                     >
                       <SongListItem song={song} />
                     </a>
