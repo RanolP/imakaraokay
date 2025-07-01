@@ -1,7 +1,8 @@
 import { Component, For } from 'solid-js';
 import type { Song } from '../types/song';
-import type { KaraokeMachine } from '../styles/karaokeColors';
-import KaraokeBadge from './KaraokeBadge';
+import KaraokeBadge from './karaoke-badge';
+
+export type KaraokeMachine = 'tj'|'ky'|'ebo'|'joysound';
 
 interface KaraokeBadgesProps {
   song: Song;

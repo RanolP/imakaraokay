@@ -1,5 +1,8 @@
-import { Component, createSignal } from 'solid-js';
-import type { KaraokeMachine } from '../styles/karaokeColors';
+import { Component, createSignal, Show } from 'solid-js';
+import { isServer } from 'solid-js/web';
+
+
+export type KaraokeMachine = 'tj'|'ky'|'ebo'|'joysound';
 
 interface KaraokeBadgeProps {
   machine: KaraokeMachine;
@@ -71,6 +74,8 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
     event.preventDefault();
     event.stopPropagation();
     
+    if (isServer) return;
+    
     try {
       await navigator.clipboard.writeText(props.id);
       
@@ -84,6 +89,8 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
   };
 
   const colors = getMachineColors(props.machine);
+
+  console.log(colors)
 
   return (
     <button

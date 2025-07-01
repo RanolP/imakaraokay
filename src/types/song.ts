@@ -1,3 +1,8 @@
+export interface Alias {
+  text: string;
+  hidden?: boolean;
+}
+
 export interface AliasableString {
   /**
    * The main headword 
@@ -6,7 +11,7 @@ export interface AliasableString {
   /**
    * Aliases for search
    */
-  aliases?: string[];
+  aliases?: Alias[];
 }
 
 export interface MultilingualSearchableString {

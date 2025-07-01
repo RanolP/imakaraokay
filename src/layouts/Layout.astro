@@ -1,0 +1,86 @@
+---
+import 'uno.css';
+import '@unocss/reset/tailwind.css';
+import LanguageSwitcher from '../features/i18n/ui/language-switcher';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  lang?: 'ko' | 'en';
+}
+
+const {
+  title = 'imakaraokay',
+  description = 'Find your favorite songs across all karaoke machines',
+  lang = 'ko',
+} = Astro.props;
+
+const siteUrl = Astro.site || 'https://your-domain.com';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#9333ea" />
+
+    <!-- Preload fonts for better performance -->
+    <link
+      rel="preload"
+      href="/fonts/inter.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  </head>
+  <body class="min-h-screen gradient-karaoke-secondary">
+    <nav class="bg-gray-200 text-gray-900 px-4">
+      <ul class="flex items-center">
+        <li class="py-2 px-4">
+          <a href="/" class="hover:text-purple-600 transition-colors"> Home </a>
+        </li>
+        <li class="py-2 px-4">
+          <a href="/about" class="hover:text-purple-600 transition-colors">
+            About
+          </a>
+        </li>
+        <li class="py-2 px-4">
+          <a href="/error" class="hover:text-purple-600 transition-colors">
+            Error
+          </a>
+        </li>
+
+        <li class="flex items-center space-x-4 ml-auto">
+          <!-- Language switcher with client-side hydration -->
+          <LanguageSwitcher client:load />
+
+          <div class="text-sm flex items-center space-x-1">
+            <span>URL:</span>
+            <input
+              class="w-20 p-1 bg-white text-sm rounded-lg"
+              type="text"
+              readonly
+              value={Astro.url.pathname}
+            />
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

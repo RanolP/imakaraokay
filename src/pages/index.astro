@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SearchInterface from '../components/search-interface';
+---
+
+<Layout
+  title="🎤 imakaraokay"
+  description="Find your favorite songs across all karaoke machines"
+>
+  <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+    <div class="container mx-auto px-4 py-16">
+      <div class="text-center mb-8">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">🎤 imakaraokay</h1>
+        <p class="text-xl md:text-2xl opacity-90">
+          Find your favorite songs across all karaoke machines
+        </p>
+      </div>
+
+      <!-- Search Interface - will hydrate on client -->
+      <SearchInterface client:load />
+    </div>
+  </div>
+</Layout>

@@ -74,7 +74,7 @@ export class SearchService {
           if (artist.name.japanese) {
             artistNames.japanese.push(artist.name.japanese.main);
             if (artist.name.japanese.aliases) {
-              artistNames.aliases.push(...artist.name.japanese.aliases);
+              artistNames.aliases.push(...artist.name.japanese.aliases.map(alias => alias.text));
             }
           }
           
@@ -82,7 +82,7 @@ export class SearchService {
           if (artist.name.english) {
             artistNames.english.push(artist.name.english.main);
             if (artist.name.english.aliases) {
-              artistNames.aliases.push(...artist.name.english.aliases);
+              artistNames.aliases.push(...artist.name.english.aliases.map(alias => alias.text));
             }
           }
           
@@ -90,28 +90,28 @@ export class SearchService {
           if (artist.name.korean) {
             artistNames.korean.push(artist.name.korean.main);
             if (artist.name.korean.aliases) {
-              artistNames.aliases.push(...artist.name.korean.aliases);
+              artistNames.aliases.push(...artist.name.korean.aliases.map(alias => alias.text));
             }
           }
         }
       });
 
-      return {
+      const normalizedSong: NormalizedSong = {
         ...song,
         _normalized: {
           title: {
             original: normalizeForSearch(song.title.original),
             japanese: song.title.japanese ? {
               main: normalizeForSearch(song.title.japanese.main),
-              aliases: normalizeArrayForSearch(song.title.japanese.aliases || []),
+              aliases: normalizeArrayForSearch(song.title.japanese.aliases?.map(alias => alias.text) || []),
             } : undefined,
             english: song.title.english ? {
               main: normalizeForSearch(song.title.english.main),
-              aliases: normalizeArrayForSearch(song.title.english.aliases || []),
+              aliases: normalizeArrayForSearch(song.title.english.aliases?.map(alias => alias.text) || []),
             } : undefined,
             korean: song.title.korean ? {
               main: normalizeForSearch(song.title.korean.main),
-              aliases: normalizeArrayForSearch(song.title.korean.aliases || []),
+              aliases: normalizeArrayForSearch(song.title.korean.aliases?.map(alias => alias.text) || []),
             } : undefined,
           },
           artists: normalizeArrayForSearch(song.artists),
@@ -125,6 +125,8 @@ export class SearchService {
           lyrics: safeNormalizeForSearch(song.lyrics),
         },
       };
+
+      return normalizedSong;
     });
   }
 
@@ -241,21 +243,21 @@ export class SearchService {
     if (song.title.japanese) {
       variants.push(song.title.japanese.main);
       if (song.title.japanese.aliases) {
-        variants.push(...song.title.japanese.aliases);
+        variants.push(...song.title.japanese.aliases.map(alias => alias.text));
       }
     }
     
     if (song.title.english) {
       variants.push(song.title.english.main);
       if (song.title.english.aliases) {
-        variants.push(...song.title.english.aliases);
+        variants.push(...song.title.english.aliases.map(alias => alias.text));
       }
     }
     
     if (song.title.korean) {
       variants.push(song.title.korean.main);
       if (song.title.korean.aliases) {
-        variants.push(...song.title.korean.aliases);
+        variants.push(...song.title.korean.aliases.map(alias => alias.text));
       }
     }
     

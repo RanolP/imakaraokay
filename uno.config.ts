@@ -1,18 +1,6 @@
-import {
-  defineConfig,
-  presetAttributify,
-  presetIcons,
-  presetTypography,
-  presetUno,
-  presetWebFonts,
-  transformerDirectives,
-  transformerVariantGroup,
-} from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetTypography, presetWebFonts, presetWind3, presetWind4, transformerDirectives, transformerVariantGroup } from 'unocss'
 
 export default defineConfig({
-  shortcuts: [
-    // Define custom shortcuts here if needed
-  ],
   theme: {
     colors: {
       // Define custom colors for your karaoke app theme here
@@ -70,83 +58,15 @@ export default defineConfig({
     }
   },
   presets: [
-    presetUno({
-      // Enable CSS reset
+    presetWind3({
       dark: 'class',
     }),
     presetAttributify(),
     presetIcons(),
     presetTypography(),
-    presetWebFonts({
-      fonts: {
-        // Define custom fonts here if needed
-      },
-    }),
   ],
   transformers: [
     transformerDirectives(),
     transformerVariantGroup(),
   ],
-  // Add comprehensive CSS reset
-  preflights: [
-    {
-      getCSS: () => `
-        /* Modern CSS Reset */
-        *, *::before, *::after {
-          box-sizing: border-box;
-        }
-        
-        * {
-          margin: 0;
-          padding: 0;
-        }
-        
-        html, body {
-          height: 100%;
-        }
-        
-        body {
-          line-height: 1.6;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-        
-        img, picture, video, canvas, svg {
-          display: block;
-          max-width: 100%;
-        }
-        
-        input, button, textarea, select {
-          font: inherit;
-        }
-        
-        p, h1, h2, h3, h4, h5, h6 {
-          overflow-wrap: break-word;
-        }
-        
-        #root {
-          isolation: isolate;
-          height: 100%;
-        }
-        
-        /* Remove default button styles */
-        button {
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-        
-        /* Remove default list styles */
-        ul, ol {
-          list-style: none;
-        }
-        
-        /* Remove default link styles */
-        a {
-          text-decoration: none;
-          color: inherit;
-        }
-      `
-    }
-  ]
 }) 

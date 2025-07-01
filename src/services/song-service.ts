@@ -1,3 +1,4 @@
+import { isServer } from 'solid-js/web';
 import type { Song, Artist } from '../types/song';
 
 export class SongService {
@@ -8,6 +9,12 @@ export class SongService {
   async loadSongs(): Promise<Song[]> {
     if (this.isLoaded) {
       return this.songs;
+    }
+
+    // Skip loading during SSR
+    if (isServer) {
+      console.log('Skipping song loading during SSR');
+      return [];
     }
 
     try {

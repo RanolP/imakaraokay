@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ClickableTitleVariant from '../../components/clickable-title-variant';
+import KaraokeBadges from '../../components/karaoke-badges';
+import type { Song } from '../../types/song';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+export async function getStaticPaths() {
+  // Load songs data for static generation
+  const songsPath = resolve('./public/data/songs.json');
+  const songsData = readFileSync(songsPath, 'utf-8');
+  const songs: Song[] = JSON.parse(songsData);
+
+  return songs.map((song) => ({
+    params: { id: song.id },
+    props: { song },
+  }));
+}
+
+interface Props {
+  song: Song;
+}
+
+const { song } = Astro.props;
+
+// Generate title and description for SEO
+const songTitle =
+  typeof song.title === 'string' ? song.title : song.title.original;
+const pageTitle = `${songTitle} - Karaoke Song Details`;
+const description = `Find karaoke machine IDs for "${songTitle}". View lyrics and karaoke information for TJ, KY, and Joysound systems.`;
+
+// Generate structured data for SEO
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'MusicComposition',
+  name: songTitle,
+  datePublished: song.releaseDate,
+  lyrics: song.lyrics,
+  additionalProperty: [
+    {
+      '@type': 'PropertyValue',
+      name: 'TJ Karaoke ID',
+      value: song.karaoke.tj,
+    },
+    {
+      '@type': 'PropertyValue',
+      name: 'KY Karaoke ID',
+      value: song.karaoke.ky,
+    },
+    {
+      '@type': 'PropertyValue',
+      name: 'Joysound ID',
+      value: song.karaoke.joysound,
+    },
+  ].filter((prop) => prop.value),
+};
+---
+
+<Layout title={pageTitle} description={description}>
+  <!-- Structured Data for SEO -->
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(structuredData)}
+  />
+
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <!-- Song Header -->
+      <div class="gradient-karaoke-hero text-white p-6">
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+        >
+          <div class="flex-1">
+            <!-- Interactive title variant selector -->
+            <ClickableTitleVariant song={song} client:load />
+
+            <!-- Artists -->
+            <div class="mt-2">
+              <span class="text-sm opacity-75">Artists:</span>
+              <span class="ml-2 text-lg">{song.artists.join(', ')}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Song Content -->
+      <div class="p-6">
+        <!-- Karaoke Machine IDs -->
+        <div class="mb-8">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">
+            🎤 Available on Karaoke Machines
+          </h2>
+          <KaraokeBadges song={song} client:load />
+        </div>
+
+        <!-- Lyrics Section -->
+        {
+          song.lyrics && (
+            <div class="mb-8">
+              <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                🎵 Lyrics
+              </h2>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <pre class="whitespace-pre-wrap text-gray-700 font-mono text-sm leading-relaxed">
+                  {song.lyrics}
+                </pre>
+              </div>
+            </div>
+          )
+        }
+
+        <!-- Additional Info -->
+        {
+          song.releaseDate && (
+            <div class="text-sm text-gray-500 border-t pt-4">
+              <span class="font-medium">Release Date:</span> {song.releaseDate}
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <!-- Back to Search -->
+    <div class="mt-8 text-center">
+      <a
+        href="/"
+        class="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+      >
+        ← Back to Search
+      </a>
+    </div>
+  </div>
+</Layout>

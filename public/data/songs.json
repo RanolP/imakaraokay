@@ -5,11 +5,15 @@
       "original": "夜に駆ける",
       "japanese": {
         "main": "夜に駆ける",
-        "aliases": ["よるにかける"]
+        "aliases": [
+          { "text": "よるにかける", "hidden": true }
+        ]
       },
       "english": {
         "main": "Racing into the Night",
-        "aliases": ["Running into the Night"]
+        "aliases": [
+          { "text": "Running into the Night" }
+        ]
       },
       "korean": {
         "main": "밤을 달리다"
@@ -30,11 +34,16 @@
       "original": "紅蓮華",
       "japanese": {
         "main": "紅蓮華",
-        "aliases": ["ぐれんげ"]
+        "aliases": [
+          { "text": "ぐれんげ" }
+        ]
       },
       "english": {
         "main": "Gurenge",
-        "aliases": ["Red Lotus"]
+        "aliases": [
+          { "text": "Red Lotus" },
+          { "text": "Internal Dev Name", "hidden": true }
+        ]
       }
     },
     "artists": ["lisa"],
@@ -53,7 +62,9 @@
       "original": "Lemon",
       "japanese": {
         "main": "レモン",
-        "aliases": ["れもん"]
+        "aliases": [
+          { "text": "れもん" }
+        ]
       },
       "english": {
         "main": "Lemon"
@@ -74,7 +85,9 @@
       "original": "Dynamite",
       "japanese": {
         "main": "ダイナマイト",
-        "aliases": ["だいなまいと"]
+        "aliases": [
+          { "text": "だいなまいと" }
+        ]
       },
       "english": {
         "main": "Dynamite"

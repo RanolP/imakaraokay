@@ -1,4 +1,5 @@
-import { createSignal, createEffect } from 'solid-js';
+import { createSignal, createEffect, onMount } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import type { Language, TranslationKeys } from '../types';
 import { ko } from '../locales/ko';
 import { en } from '../locales/en';
@@ -14,7 +15,7 @@ const translations: Record<Language, TranslationKeys> = {
 
 // Get initial language from localStorage or default to Korean
 const getInitialLanguage = (): Language => {
-  if (typeof window === 'undefined') return DEFAULT_LANGUAGE;
+  if (isServer) return DEFAULT_LANGUAGE;
   
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -31,16 +32,16 @@ const getInitialLanguage = (): Language => {
 // Create reactive signal for current language
 const [currentLanguage, setCurrentLanguage] = createSignal<Language>(getInitialLanguage());
 
-// Save language to localStorage when it changes
-createEffect(() => {
-  if (typeof window === 'undefined') return;
-  
-  try {
-    localStorage.setItem(STORAGE_KEY, currentLanguage());
-  } catch (error) {
-    console.warn('Failed to save language to localStorage:', error);
-  }
-});
+// Save language to localStorage when it changes - only on client
+if (!isServer) {
+  createEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, currentLanguage());
+    } catch (error) {
+      console.warn('Failed to save language to localStorage:', error);
+    }
+  });
+}
 
 // Get current translations
 export const getCurrentTranslations = () => translations[currentLanguage()];

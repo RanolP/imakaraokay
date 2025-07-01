@@ -1,6 +1,7 @@
 import { Component, createSignal, onMount, onCleanup, Show } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
-import { i18nStore } from '../model/i18nStore';
+import { i18nStore } from '../model/i18n-store';
 import type { Language } from '../types';
 
 interface LanguageSwitcherProps {
@@ -21,7 +22,7 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
   const currentLanguageData = () => languages.find(lang => lang.code === currentLang());
 
   const updatePosition = async () => {
-    if (!buttonRef || !dropdownRef) return;
+    if (isServer || !buttonRef || !dropdownRef) return;
 
     const { x, y } = await computePosition(buttonRef, dropdownRef, {
       placement: 'bottom-end',
@@ -58,11 +59,15 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
   };
 
   onMount(() => {
-    document.addEventListener('click', handleClickOutside);
+    if (!isServer) {
+      document.addEventListener('click', handleClickOutside);
+    }
   });
 
   onCleanup(() => {
-    document.removeEventListener('click', handleClickOutside);
+    if (!isServer) {
+      document.removeEventListener('click', handleClickOutside);
+    }
   });
 
   return (
@@ -70,7 +75,7 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
+        class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200 hover:text-purple-600"
         title={currentLang() === 'ko' ? 'Switch language' : '언어 변경'}
       >
         <span class="text-base leading-none">
@@ -80,7 +85,7 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
           {currentLanguageData()?.label}
         </span>
         <svg 
-          class={`w-4 h-4 transition-all duration-200 ${isOpen() ? 'rotate-180 text-purple-600 dark:text-purple-400' : 'text-gray-400'}`}
+          class={`w-4 h-4 transition-all duration-200 ${isOpen() ? 'rotate-180 text-purple-600' : 'text-gray-400'}`}
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
@@ -92,7 +97,7 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
       <Show when={isOpen()}>
         <div
           ref={dropdownRef}
-          class="fixed z-50 bg-white dark:bg-gray-800 min-w-40 animate-in fade-in slide-in-from-top-2 duration-200"
+          class="fixed z-50 bg-white dark:bg-gray-800 min-w-40"
           style={{ position: 'absolute' }}
         >
           {languages.map((language) => (
@@ -101,13 +106,13 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
               class={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left transition-colors duration-150 ${
                 currentLang() === language.code 
                   ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' 
-                  : 'text-gray-700 dark:text-gray-300'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               <span class="text-base leading-none">{language.flag}</span>
               <span class="font-medium flex-1">{language.label}</span>
               <Show when={currentLang() === language.code}>
-                <div class="w-2 h-2 bg-purple-600 dark:bg-purple-400" />
+                <div class="w-2 h-2 bg-purple-600 dark:bg-purple-400 rounded-full" />
               </Show>
             </button>
           ))}
@@ -117,4 +122,4 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
   );
 };
 
-export default LanguageSwitcher; 
+export default LanguageSwitcher;

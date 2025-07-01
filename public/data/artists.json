@@ -5,7 +5,9 @@
       "original": "YOASOBI",
       "japanese": {
         "main": "ヨアソビ",
-        "aliases": ["よあそび"]
+        "aliases": [
+          { "text": "よあそび" }
+        ]
       },
       "english": {
         "main": "YOASOBI"
@@ -20,7 +22,9 @@
       "original": "LiSA",
       "japanese": {
         "main": "リサ",
-        "aliases": ["りさ"]
+        "aliases": [
+          { "text": "りさ" }
+        ]
       },
       "english": {
         "main": "LiSA"
@@ -35,7 +39,9 @@
       "original": "米津玄師",
       "japanese": {
         "main": "米津玄師",
-        "aliases": ["よねづけんし"]
+        "aliases": [
+          { "text": "よねづけんし" }
+        ]
       },
       "english": {
         "main": "Kenshi Yonezu"
@@ -50,14 +56,20 @@
       "original": "BTS",
       "japanese": {
         "main": "ビーティーエス",
-        "aliases": ["びーてぃーえす"]
+        "aliases": [
+          { "text": "びーてぃーえす" }
+        ]
       },
       "english": {
         "main": "BTS"
       },
       "korean": {
         "main": "방탄소년단",
-        "aliases": ["BTS", "Bangtan Boys"]
+        "aliases": [
+          { "text": "BTS" },
+          { "text": "Bangtan Boys" },
+          { "text": "Internal Korean Ref", "hidden": true }
+        ]
       }
     },
     "songs": ["dynamite"],

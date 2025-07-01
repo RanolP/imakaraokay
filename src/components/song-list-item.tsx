@@ -1,8 +1,8 @@
 import { Component, createMemo } from 'solid-js';
 import type { Song } from '../types/song';
-import KaraokeBadges from './KaraokeBadges';
+import KaraokeBadges from './karaoke-badges';
 import { useTranslation } from '../features/i18n';
-import { songService } from '../services/songService';
+import { songService } from '../services/song-service';
 
 interface SongListItemProps {
   song: Song;
@@ -38,10 +38,22 @@ const SongListItem: Component<SongListItemProps> = (props) => {
       ko: 'korean' as const,
       en: 'english' as const
     };
-    
+
     return props.song.artists
-      .map(artistId => songService.getDisplayArtist(artistId, artistLangPreference[language()]))
-      .join(', ');
+      .map((artistId, idx) => {
+        const displayName = songService.getDisplayArtist(artistId, artistLangPreference[language()]);
+        // Link to artist page (assuming /artists/[id])
+        return (
+          <a
+            href={`/artists/${artistId}`}
+            class="text-blue-600 hover:underline"
+            rel="noopener"
+            tabIndex={0}
+          >
+            {displayName}
+          </a>
+        );
+      })
   };
 
   // Make these values reactive so they update when language changes
