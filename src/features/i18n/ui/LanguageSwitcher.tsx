@@ -26,7 +26,7 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
     const { x, y } = await computePosition(buttonRef, dropdownRef, {
       placement: 'bottom-end',
       middleware: [
-        offset(4),
+        offset(8),
         flip(),
         shift({ padding: 8 }),
       ],
@@ -70,17 +70,17 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"
+        class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200"
         title={currentLang() === 'ko' ? 'Switch language' : '언어 변경'}
       >
-        <span class="text-lg">
+        <span class="text-base leading-none">
           {currentLanguageData()?.flag}
         </span>
-        <span>
+        <span class="hidden sm:inline">
           {currentLanguageData()?.label}
         </span>
         <svg 
-          class={`w-4 h-4 transition-transform ${isOpen() ? 'rotate-180' : ''}`}
+          class={`w-4 h-4 transition-all duration-200 ${isOpen() ? 'rotate-180 text-purple-600 dark:text-purple-400' : 'text-gray-400'}`}
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
@@ -92,22 +92,22 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
       <Show when={isOpen()}>
         <div
           ref={dropdownRef}
-          class="fixed z-50 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-32"
+          class="fixed z-50 bg-white dark:bg-gray-800 min-w-40 animate-in fade-in slide-in-from-top-2 duration-200"
           style={{ position: 'absolute' }}
         >
           {languages.map((language) => (
             <button
               onClick={() => handleLanguageSelect(language.code)}
-              class={`w-full flex items-center space-x-3 px-4 py-2 text-sm text-left hover:bg-gray-50 transition-colors ${
-                currentLang() === language.code ? 'bg-purple-50 text-purple-600' : 'text-gray-700'
+              class={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left transition-colors duration-150 ${
+                currentLang() === language.code 
+                  ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' 
+                  : 'text-gray-700 dark:text-gray-300'
               }`}
             >
-              <span class="text-lg">{language.flag}</span>
-              <span class="font-medium">{language.label}</span>
+              <span class="text-base leading-none">{language.flag}</span>
+              <span class="font-medium flex-1">{language.label}</span>
               <Show when={currentLang() === language.code}>
-                <svg class="w-4 h-4 ml-auto text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
+                <div class="w-2 h-2 bg-purple-600 dark:bg-purple-400" />
               </Show>
             </button>
           ))}

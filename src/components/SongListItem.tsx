@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Component, createMemo } from 'solid-js';
 import type { Song } from '../types/song';
 import KaraokeBadges from './KaraokeBadges';
 import { useTranslation } from '../features/i18n';
@@ -44,17 +44,18 @@ const SongListItem: Component<SongListItemProps> = (props) => {
       .join(', ');
   };
 
-  const currentTitle = getCurrentTitle();
+  // Make these values reactive so they update when language changes
+  const currentTitle = createMemo(() => getCurrentTitle());
   const originalTitle = props.song.title.original;
-  const showOriginal = currentTitle !== originalTitle;
+  const showOriginal = createMemo(() => currentTitle() !== originalTitle);
 
   return (
     <div class={`p-4 hover:bg-gray-50 transition-colors ${props.class || ''}`}>
       {/* Title Line */}
       <div class="text-lg font-semibold text-gray-900 mb-2 leading-tight">
         <span class="text-purple-600">⟨</span>
-        {currentTitle}
-        {showOriginal && (
+        {currentTitle()}
+        {showOriginal() && (
           <span class="text-gray-600"> ({originalTitle})</span>
         )}
         <span class="text-purple-600">⟩</span>

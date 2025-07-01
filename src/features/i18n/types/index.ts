@@ -1,5 +1,3 @@
-export type Language = 'ko' | 'en';
-
 export interface TranslationKeys {
   // Navigation
   nav: {
@@ -45,4 +43,6 @@ export interface TranslationKeys {
     noLyrics: string;
     availableOn: string;
   };
-} 
+}
+
+export type Language = 'ko' | 'en'; 

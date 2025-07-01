@@ -21,7 +21,10 @@ const Home: Component = () => {
   onMount(async () => {
     try {
       const songs = await songService.loadSongs();
-      searchService.setSongs(songs);
+      const artists = songService.getArtists();
+      
+      // Pass both songs and artists to search service for enhanced artist name search
+      searchService.setSongs(songs, artists);
       setPopularSongs(songService.getPopularSongs(10));
     } catch (error) {
       console.error('Failed to load songs:', error);
@@ -33,29 +36,20 @@ const Home: Component = () => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     
-    if (query.trim()) {
-      const results = searchService.search({
-        query: query,
-        limit: 20,
-      });
-      setSearchResults(results);
-    } else {
-      setSearchResults({
-        songs: [],
-        total: 0,
-        query: '',
-      });
+    if (!query.trim()) {
+      setSearchResults({ songs: [], total: 0, query: '' });
+      return;
     }
+
+    const songResults = searchService.search({
+      query: query,
+      limit: 50,
+    });
+    setSearchResults(songResults);
   };
 
-  const getDisplayTitle = (song: Song): string => {
-    return songService.getDisplayTitle(song);
-  };
-
-  const getDisplayArtists = (song: Song): string => {
-    return song.artists
-      .map(artistId => songService.getDisplayArtist(artistId))
-      .join(', ');
+  const isSearchActive = () => {
+    return searchQuery().trim();
   };
 
   return (
@@ -70,7 +64,7 @@ const Home: Component = () => {
             {t('home.subtitle')}
           </p>
           
-          {/* Search Bar */}
+          {/* Simple Search Interface */}
           <div class="max-w-2xl mx-auto">
             <div class="relative">
               <input
@@ -99,7 +93,7 @@ const Home: Component = () => {
 
         <Show when={!loading()}>
           {/* Search Results */}
-          <Show when={searchQuery().trim() && searchResults().songs.length > 0}>
+          <Show when={isSearchActive() && searchResults().songs.length > 0}>
             <div class="mb-8">
               <h2 class="text-2xl font-bold mb-4 text-gray-800">
                 {t('home.searchResults')} ({searchResults().total} found)
@@ -120,7 +114,7 @@ const Home: Component = () => {
           </Show>
 
           {/* No Results */}
-          <Show when={searchQuery().trim() && searchResults().songs.length === 0}>
+          <Show when={isSearchActive() && searchResults().songs.length === 0}>
             <div class="text-center py-12">
               <div class="text-xl text-gray-600 mb-2">
                 No songs found for "{searchQuery()}"
@@ -132,7 +126,7 @@ const Home: Component = () => {
           </Show>
 
           {/* Popular Songs (shown when no search query) */}
-          <Show when={!searchQuery().trim() && popularSongs().length > 0}>
+          <Show when={!isSearchActive() && popularSongs().length > 0}>
             <div>
               <h2 class="text-2xl font-bold mb-6 text-gray-800">
                 {t('home.popularSongs')}

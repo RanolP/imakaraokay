@@ -1,8 +1,9 @@
-import { Component, createSignal, onMount, Show, For } from 'solid-js';
+import { Component, createSignal, onMount, Show, For, createMemo } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import { songService } from '../../services/songService';
 import type { Song } from '../../types/song';
 import KaraokeBadges from '../../components/KaraokeBadges';
+import { useTranslation } from '../../features/i18n';
 
 interface TitleVariant {
   lang: string;
@@ -12,6 +13,7 @@ interface TitleVariant {
 
 const SongDetail: Component = () => {
   const params = useParams();
+  const { language } = useTranslation();
   const [song, setSong] = createSignal<Song | null>(null);
   const [loading, setLoading] = createSignal(true);
   const [error, setError] = createSignal<string | null>(null);
@@ -39,8 +41,6 @@ const SongDetail: Component = () => {
     }
   });
 
-
-
   const formatReleaseDate = (dateString: string): string => {
     try {
       const date = new Date(dateString);
@@ -54,15 +54,34 @@ const SongDetail: Component = () => {
     }
   };
 
-  const getDisplayTitle = (song: Song): string => {
-    return songService.getDisplayTitle(song);
-  };
+  // Language-aware display functions for the header
+  const getDisplayTitle = createMemo(() => {
+    const currentSong = song();
+    if (!currentSong) return '';
+    
+    const langMapping = {
+      ko: 'korean' as const,
+      en: 'english' as const
+    };
+    
+    const preferredLang = langMapping[language()];
+    return songService.getDisplayTitle(currentSong, preferredLang || 'original');
+  });
 
-  const getDisplayArtists = (song: Song): string => {
-    return song.artists
-      .map(artistId => songService.getDisplayArtist(artistId))
+  const getDisplayArtists = createMemo(() => {
+    const currentSong = song();
+    if (!currentSong) return '';
+    
+    const langMapping = {
+      ko: 'korean' as const,
+      en: 'english' as const
+    };
+    
+    const preferredLang = langMapping[language()];
+    return currentSong.artists
+      .map(artistId => songService.getDisplayArtist(artistId, preferredLang || 'original'))
       .join(', ');
-  };
+  });
 
   const getAllTitleVariants = (song: Song): TitleVariant[] => {
     const variants: TitleVariant[] = [
@@ -115,8 +134,8 @@ const SongDetail: Component = () => {
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header */}
           <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
-            <h1 class="text-3xl font-bold mb-2">{getDisplayTitle(song()!)}</h1>
-            <p class="text-lg font-semibold">by {getDisplayArtists(song()!)}</p>
+            <h1 class="text-3xl font-bold mb-2">{getDisplayTitle()}</h1>
+            <p class="text-lg font-semibold">by {getDisplayArtists()}</p>
             <Show when={song()!.releaseDate}>
               <p class="text-sm opacity-75 mt-1">Released: {formatReleaseDate(song()!.releaseDate!)}</p>
             </Show>
