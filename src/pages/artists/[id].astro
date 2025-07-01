@@ -1,0 +1,296 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ClickableTitleVariant from '../../components/clickable-title-variant';
+import SongListItem from '../../components/song-list-item';
+import type { Artist, Song } from '../../types/song';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+export async function getStaticPaths() {
+    // Load artists data from individual files organized by debut year
+    const knownYears = ['2010', '2012', '2013', '2019'];
+    const artistsByYear: { [key: string]: string[] } = {
+        '2010': ['lisa'],
+        '2012': ['kenshi-yonezu'],
+        '2013': ['bts'],
+        '2019': ['yoasobi'],
+    };
+
+    const artists: Artist[] = [];
+    const songs: Song[] = [];
+
+    // First load all songs (needed for artist pages to show song details)
+    const songYears = ['2018', '2019', '2020'];
+    const songsByYear: { [key: string]: string[] } = {
+        '2018': ['lemon'],
+        '2019': ['yoru-ni-kakeru', 'gurenge'],
+        '2020': ['dynamite'],
+    };
+
+    for (const year of songYears) {
+        const songIds = songsByYear[year] || [];
+        for (const songId of songIds) {
+            try {
+                const songPath = resolve(
+                    `./public/data/songs/${year}/${songId}.json`,
+                );
+                const songData = readFileSync(songPath, 'utf-8');
+                const song: Song = JSON.parse(songData);
+                songs.push(song);
+            } catch (error) {
+                console.warn(
+                    `Failed to load song ${songId} from year ${year}:`,
+                    error,
+                );
+            }
+        }
+    }
+
+    // Then load artists
+    for (const year of knownYears) {
+        const artistIds = artistsByYear[year] || [];
+
+        for (const artistId of artistIds) {
+            try {
+                const artistPath = resolve(
+                    `./public/data/artists/${year}/${artistId}.json`,
+                );
+                const artistData = readFileSync(artistPath, 'utf-8');
+                const artist: Artist = JSON.parse(artistData);
+
+                // Get the artist's songs from the loaded songs
+                const artistSongs = songs.filter((song) =>
+                    song.artists.includes(artist.id),
+                );
+
+                artists.push({
+                    ...artist,
+                    songs: artistSongs.map((song) => song.id),
+                    songCount: artistSongs.length,
+                });
+            } catch (error) {
+                console.warn(
+                    `Failed to load artist ${artistId} from year ${year}:`,
+                    error,
+                );
+            }
+        }
+    }
+
+    return artists.map((artist) => ({
+        params: { id: artist.id },
+        props: {
+            artist,
+            songs: songs.filter((song) => song.artists.includes(artist.id)),
+        },
+    }));
+}
+
+interface Props {
+    artist: Artist;
+    songs: Song[];
+}
+
+const { artist, songs } = Astro.props;
+
+// Generate title and description for SEO
+const artistName =
+    typeof artist.name === 'string' ? artist.name : artist.name.original;
+const pageTitle = `${artistName} - Artist Profile`;
+const description = `Discover karaoke songs by ${artistName}. Find machine IDs for TJ, KY, and Joysound systems.`;
+
+// Generate structured data for SEO
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'MusicGroup',
+    name: artistName,
+    foundingDate: artist.debutDate,
+    genre: 'Popular Music',
+    additionalProperty: [
+        {
+            '@type': 'PropertyValue',
+            name: 'Song Count',
+            value: artist.songCount || songs.length,
+        },
+        {
+            '@type': 'PropertyValue',
+            name: 'Debut Date',
+            value: artist.debutDate,
+        },
+    ].filter((prop) => prop.value),
+};
+---
+
+<Layout title={pageTitle} description={description}>
+    <!-- Structured Data for SEO -->
+    <script
+        type="application/ld+json"
+        set:html={JSON.stringify(structuredData)}
+    />
+
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Artist Header -->
+            <div
+                class="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6"
+            >
+                <div
+                    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+                >
+                    <div class="flex-1">
+                        <!-- Artist Name -->
+                        <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                            <span class="text-purple-200">🎤</span>
+                            {artistName}
+                        </h1>
+
+                        <!-- Artist Info -->
+                        <div class="flex flex-wrap gap-4 text-sm opacity-90">
+                            {
+                                artist.debutDate && (
+                                    <div>
+                                        <span class="opacity-75">Debut:</span>
+                                        <span class="ml-1 font-medium">
+                                            {new Date(
+                                                artist.debutDate,
+                                            ).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                )
+                            }
+                            <div>
+                                <span class="opacity-75">Songs:</span>
+                                <span class="ml-1 font-medium"
+                                    >{songs.length}</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Artist Content -->
+            <div class="p-6">
+                <!-- Songs Section -->
+                {
+                    songs.length > 0 && (
+                        <div class="mb-8">
+                            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                                🎵 Songs by {artistName}
+                            </h2>
+                            <div class="bg-gray-50 rounded-lg overflow-hidden">
+                                {songs.map((song, index) => (
+                                    <a
+                                        href={`/songs/${song.id}`}
+                                        class="block border-b border-gray-200 last:border-b-0 hover:bg-white transition-colors"
+                                    >
+                                        <SongListItem song={song} client:load />
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                }
+
+                <!-- No Songs Message -->
+                {
+                    songs.length === 0 && (
+                        <div class="text-center py-12">
+                            <div class="text-xl text-gray-600 mb-2">
+                                No songs available for {artistName}
+                            </div>
+                            <div class="text-gray-500">
+                                Songs may be added in future updates
+                            </div>
+                        </div>
+                    )
+                }
+
+                <!-- Additional Artist Info -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-600"
+                    >
+                        <div>
+                            <h3 class="font-medium text-gray-900 mb-2">
+                                Artist Details
+                            </h3>
+                            <dl class="space-y-2">
+                                <div class="flex justify-between">
+                                    <dt>Artist ID:</dt>
+                                    <dd
+                                        class="font-mono text-xs bg-gray-100 px-2 py-1 rounded"
+                                    >
+                                        {artist.id}
+                                    </dd>
+                                </div>
+                                {
+                                    artist.debutDate && (
+                                        <div class="flex justify-between">
+                                            <dt>Debut Date:</dt>
+                                            <dd>
+                                                {new Date(
+                                                    artist.debutDate,
+                                                ).toLocaleDateString()}
+                                            </dd>
+                                        </div>
+                                    )
+                                }
+                                <div class="flex justify-between">
+                                    <dt>Total Songs:</dt>
+                                    <dd>{songs.length}</dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <div>
+                            <h3 class="font-medium text-gray-900 mb-2">
+                                Name Variants
+                            </h3>
+                            <dl class="space-y-2">
+                                <div class="flex justify-between">
+                                    <dt>Original:</dt>
+                                    <dd>{artist.name.original}</dd>
+                                </div>
+                                {
+                                    artist.name.japanese && (
+                                        <div class="flex justify-between">
+                                            <dt>Japanese:</dt>
+                                            <dd>{artist.name.japanese.main}</dd>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    artist.name.english && (
+                                        <div class="flex justify-between">
+                                            <dt>English:</dt>
+                                            <dd>{artist.name.english.main}</dd>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    artist.name.korean && (
+                                        <div class="flex justify-between">
+                                            <dt>Korean:</dt>
+                                            <dd>{artist.name.korean.main}</dd>
+                                        </div>
+                                    )
+                                }
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Search -->
+        <div class="mt-8 text-center">
+            <a
+                href="/"
+                class="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+                ← Back to Search
+            </a>
+        </div>
+    </div>
+</Layout>
