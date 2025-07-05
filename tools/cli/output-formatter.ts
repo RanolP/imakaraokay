@@ -28,7 +28,7 @@ export class OutputFormatter {
     // Display TJ results
     if (resultsBySource.TJ?.length > 0) {
       console.log(chalk.bold('TJ Karaoke:'));
-      resultsBySource.TJ.slice(0, 5).forEach(result => {
+      resultsBySource.TJ.slice(0, 5).forEach((result: any) => {
         console.log(
           `  ${chalk.cyan(result.id)} - ${result.title}` +
           (result.artist ? ` ${chalk.gray(`by ${result.artist}`)}` : '')
@@ -43,7 +43,7 @@ export class OutputFormatter {
     // Display KY results
     if (resultsBySource.KY?.length > 0) {
       console.log(chalk.bold('KY Karaoke:'));
-      resultsBySource.KY.slice(0, 5).forEach(result => {
+      resultsBySource.KY.slice(0, 5).forEach((result: any) => {
         console.log(
           `  ${chalk.magenta(result.id)} - ${result.title}` +
           (result.artist ? ` ${chalk.gray(`by ${result.artist}`)}` : '')
@@ -67,7 +67,7 @@ export class OutputFormatter {
     // Display MusixMatch results
     if (resultsBySource.MusixMatch?.length > 0) {
       console.log(chalk.bold('MusixMatch:'));
-      resultsBySource.MusixMatch.forEach(result => {
+      resultsBySource.MusixMatch.forEach((result: any) => {
         console.log(
           `  ${result.title}` +
           (result.artist ? ` ${chalk.gray(`by ${result.artist}`)}` : '') +
@@ -83,10 +83,16 @@ export class OutputFormatter {
     // Display Vocaro results
     if (resultsBySource.Vocaro?.length > 0) {
       console.log(chalk.bold('Vocaro Wiki:'));
-      resultsBySource.Vocaro.forEach(result => {
-        console.log(
-          `  ${result.title}\n  ${chalk.blue.underline(result.url)}`
-        );
+      resultsBySource.Vocaro.forEach((result: any) => {
+        let output = `  ${result.title}`;
+        if (result.artist) {
+          output += ` ${chalk.gray(`by ${result.artist}`)}`;
+        }
+        if (result.lyrics) {
+          output += `\n  ${chalk.italic.gray(result.lyrics)}`;
+        }
+        output += `\n  ${chalk.blue.underline(result.url)}`;
+        console.log(output);
       });
     } else {
       console.log(chalk.gray('  No results from Vocaro Wiki'));
