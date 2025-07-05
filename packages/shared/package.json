@@ -1,0 +1,36 @@
+{
+  "name": "@imakaraokay/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities and types for imakaraokay",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "keywords": [
+    "karaoke",
+    "shared",
+    "utilities",
+    "types"
+  ],
+  "author": "RanolP",
+  "license": "MIT"
+} 

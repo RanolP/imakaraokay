@@ -1,0 +1,41 @@
+{
+  "name": "@imakaraokay/website",
+  "version": "1.0.0",
+  "description": "Karaoke song search website built with Astro and Solid.js",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "type-check": "astro check",
+    "clean": "rm -rf dist .astro"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@astrojs/sitemap": "^3.4.1",
+    "@astrojs/solid-js": "^5.1.0",
+    "@floating-ui/dom": "^1.7.2",
+    "@imakaraokay/shared": "workspace:*",
+    "@unocss/reset": "^66.3.2",
+    "astro": "^5.10.2",
+    "astro-i18next": "1.0.0-beta.21",
+    "fuse.js": "^7.0.0",
+    "solid-js": "^1.9.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "unocss": "^66.3.2",
+    "vite": "^5.4.19"
+  },
+  "keywords": [
+    "karaoke",
+    "search",
+    "website",
+    "astro",
+    "solidjs"
+  ],
+  "author": "RanolP"
+}

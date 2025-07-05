@@ -1,66 +1,140 @@
-# 🎤 imakaraokay
+# imakaraokay (今からオケー)
 
-Find your favorite songs across all karaoke machines! A comprehensive database of karaoke songs with their corresponding machine IDs for TJ Karaoke, KY Karaoke, and Joysound.
+A comprehensive karaoke song search platform built as a monorepo with multiple services and tools.
 
-## Features
+## 🎤 What is imakaraokay?
 
-- 🔍 **Unified Search** - Search by song title, artist, or lyrics across all languages
-- 🌐 **Multilingual Support** - Korean, English, and Japanese language switching
-- 📱 **Mobile-Friendly** - Responsive design optimized for mobile karaoke sessions
-- ⚡ **Lightning Fast** - Static-generated pages with SolidJS islands for optimal performance
-- 🎯 **Accurate Mapping** - Precise karaoke machine ID mapping across systems
+"imakaraokay" is a Japanese wordplay combining:
+- 今から (ima kara) = "from now"
+- オケー (okay) = "OK"
+- 今カラオケ (ima karaoke) = "now karaoke"
 
-## Technology Stack
+## 📁 Project Structure
 
-- **[Astro](https://astro.build)** - For lightning-fast static site generation
-- **[SolidJS](https://solidjs.com)** - For reactive, efficient islands of interactivity
-- **[UnoCSS](https://unocss.dev)** - For atomic CSS styling
-- **[TypeScript](https://typescriptlang.org)** - For type-safe development
+This is a pnpm workspace monorepo with the following structure:
 
-## Getting Started
+```
+imakaraokay/
+├── services/
+│   └── website/          # Main Astro + Solid.js website
+├── packages/
+│   └── shared/           # Shared utilities and types
+├── tools/
+│   └── cli/              # Karaoke search CLI tool
+└── docs/                 # Documentation (if needed)
+```
 
-This project uses [pnpm](https://pnpm.io) as the package manager.
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm 8+
+
+### Installation
 
 ```bash
-# Install dependencies
+# Install all dependencies across the monorepo
 pnpm install
 
-# Start development server
-pnpm run dev
-
-# Build for production
-pnpm run build
-
-# Preview production build
-pnpm run preview
+# Build shared packages
+pnpm --filter @imakaraokay/shared build
 ```
 
-## Project Structure
+### Development
 
-```
-src/
-├── components/          # Reusable SolidJS components
-├── features/           # Feature-specific modules (i18n, etc.)
-├── layouts/            # Astro layout components
-├── pages/              # Astro pages (routes)
-│   ├── index.astro     # Home page
-│   ├── about.astro     # About page
-│   └── songs/          # Dynamic song pages
-├── services/           # Business logic and data services
-└── types/              # TypeScript type definitions
+```bash
+# Start website development server
+pnpm dev
 
-public/
-└── data/               # JSON data files (songs, artists)
+# Start all services in development mode
+pnpm dev:all
+
+# Use the CLI tool
+pnpm search "song name"
 ```
 
-## Deployment
+### Building
 
-The `dist` folder can be deployed to any static host provider:
-- **Netlify**
-- **Vercel** 
-- **GitHub Pages**
-- **Cloudflare Pages**
+```bash
+# Build the website
+pnpm build
 
-This project was migrated from a SolidJS router template to use modern Astro architecture.
+# Build all packages
+pnpm build:all
+```
+
+## 📦 Packages
+
+### Services
+
+- **@imakaraokay/website** - Main karaoke search website built with Astro and Solid.js
+
+### Packages
+
+- **@imakaraokay/shared** - Shared utilities, types, and constants used across services
+
+### Tools
+
+- **@imakaraokay/cli** - Command-line tool for searching karaoke songs
+
+## 🛠 Technologies
+
+- **Frontend**: Astro, Solid.js, UnoCSS
+- **Search**: Fuse.js with NFKD normalization
+- **Styling**: UnoCSS with custom karaoke color palette
+- **Internationalization**: Custom i18n system (Korean/English)
+- **Build**: Static Site Generation (SSG)
+- **Deployment**: GitHub Pages with GitHub Actions
+- **Package Management**: pnpm workspaces
+
+## 🎨 Features
+
+- **Multi-provider Search**: TJ, KY, Joysound, EBO karaoke machines
+- **Advanced Search**: NFKD normalization for accurate Korean/Japanese text matching
+- **Responsive Design**: Modern UI with karaoke-themed color palette
+- **Internationalization**: Korean (primary) and English support
+- **Static Generation**: Pre-generated pages for optimal performance
+- **CLI Tool**: Command-line interface for quick searches
+
+## 🌈 Karaoke Machine Support
+
+| Provider | Color | ID Format |
+|----------|-------|-----------|
+| TJ | #00AFEC (cyan-blue) | 5-6 digits |
+| KY | #8877dd (purple-blue) | 5-6 digits |
+| Joysound | #d70e18 (red) | 6-8 digits |
+| EBO | #6b7280 (gray) | 4-6 digits |
+
+## 📝 Scripts
+
+```bash
+# Development
+pnpm dev              # Start website dev server
+pnpm dev:all          # Start all services in dev mode
+
+# Building
+pnpm build            # Build website
+pnpm build:all        # Build all packages
+
+# CLI
+pnpm search "query"   # Search for karaoke songs
+
+# Maintenance
+pnpm clean            # Clean all build outputs
+pnpm type-check       # Run TypeScript checks
+```
+
+## 🤝 Contributing
+
+1. Clone the repository
+2. Install dependencies: `pnpm install`
+3. Make your changes
+4. Build and test: `pnpm build:all`
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - see LICENSE file for details.
 
 
