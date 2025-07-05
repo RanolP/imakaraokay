@@ -129,7 +129,7 @@ export class SearchService {
           if (artist.name.japanese) {
             artistNames.japanese.push(artist.name.japanese.main);
             if (artist.name.japanese.aliases) {
-              artistNames.aliases.push(...artist.name.japanese.aliases.map(alias => alias.text));
+              artistNames.aliases.push(...artist.name.japanese.aliases.map((alias: any) => alias.text));
             }
           }
           
@@ -137,7 +137,7 @@ export class SearchService {
           if (artist.name.english) {
             artistNames.english.push(artist.name.english.main);
             if (artist.name.english.aliases) {
-              artistNames.aliases.push(...artist.name.english.aliases.map(alias => alias.text));
+              artistNames.aliases.push(...artist.name.english.aliases.map((alias: any) => alias.text));
             }
           }
           
@@ -145,7 +145,7 @@ export class SearchService {
           if (artist.name.korean) {
             artistNames.korean.push(artist.name.korean.main);
             if (artist.name.korean.aliases) {
-              artistNames.aliases.push(...artist.name.korean.aliases.map(alias => alias.text));
+              artistNames.aliases.push(...artist.name.korean.aliases.map((alias: any) => alias.text));
             }
           }
         }
@@ -186,7 +186,7 @@ export class SearchService {
   }
 
   private initializeFuse() {
-    // Song search configuration
+    // Song search configuration - made less restrictive
     const songFuseOptions = {
       keys: [
         { name: '_normalized.title.original', weight: 2 },
@@ -204,13 +204,15 @@ export class SearchService {
         { name: '_normalized.artistNames.aliases', weight: 1.5 },
         { name: '_normalized.lyrics', weight: 0.5 },
       ],
-      threshold: 0.3, // Fuzzy matching threshold
+      threshold: 0.4, // Made less restrictive (was 0.3)
       includeScore: true,
       includeMatches: true,
-      minMatchCharLength: 2,
+      minMatchCharLength: 1, // Allow single character matches (was 2)
+      ignoreLocation: true, // Don't consider location of matches
+      findAllMatches: true, // Find all matches, not just the first
     };
 
-    // Artist search configuration
+    // Artist search configuration - made less restrictive
     const artistFuseOptions = {
       keys: [
         { name: '_normalized.name.original', weight: 2 },
@@ -222,10 +224,12 @@ export class SearchService {
         { name: '_normalized.name.korean.aliases', weight: 1.5 },
         { name: '_normalized.id', weight: 1 },
       ],
-      threshold: 0.3,
+      threshold: 0.4, // Made less restrictive (was 0.3)
       includeScore: true,
       includeMatches: true,
-      minMatchCharLength: 2,
+      minMatchCharLength: 1, // Allow single character matches (was 2)
+      ignoreLocation: true,
+      findAllMatches: true,
     };
 
     this.songFuse = new Fuse(this.normalizedSongs, songFuseOptions);
@@ -250,7 +254,7 @@ export class SearchService {
       const normalizedQuery = normalizeForSearch(options.query);
       
       // Search songs
-      if (this.songFuse) {
+      if (this.songFuse && this.normalizedSongs.length > 0) {
         const songFuseResults = this.songFuse.search(normalizedQuery, {
           limit: options.limit || 50,
         });
@@ -258,7 +262,7 @@ export class SearchService {
       }
 
       // Search artists
-      if (this.artistFuse) {
+      if (this.artistFuse && this.normalizedArtists.length > 0) {
         const artistFuseResults = this.artistFuse.search(normalizedQuery, {
           limit: 10, // Limit artist results to keep UI manageable
         });
