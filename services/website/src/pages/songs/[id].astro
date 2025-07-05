@@ -8,59 +8,84 @@ import { resolve } from 'path';
 
 export async function getStaticPaths() {
   // Load songs data from individual files organized by release year
-  const knownYears = ['2018', '2019', '2020'];
-  const songsByYear: { [key: string]: string[] } = {
-    '2018': ['lemon'],
-    '2019': ['yoru-ni-kakeru', 'gurenge'],
-    '2020': ['dynamite'],
-  };
-
   const songs: Song[] = [];
 
-  for (const year of knownYears) {
-    const songIds = songsByYear[year] || [];
+  try {
+    const songsBasePath = resolve('./public/data/songs');
+    const { readdirSync } = await import('fs');
+    const yearDirectories = readdirSync(songsBasePath, { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) => dirent.name);
 
-    for (const songId of songIds) {
+    for (const year of yearDirectories) {
       try {
-        const songPath = resolve(`./public/data/songs/${year}/${songId}.json`);
-        const songData = readFileSync(songPath, 'utf-8');
-        const song: Song = JSON.parse(songData);
-        songs.push(song);
+        const yearPath = resolve(songsBasePath, year);
+        const songFiles = readdirSync(yearPath, { withFileTypes: true })
+          .filter((dirent) => dirent.isFile() && dirent.name.endsWith('.json'))
+          .map((dirent) => dirent.name.replace('.json', ''));
+
+        for (const songId of songFiles) {
+          try {
+            const songPath = resolve(yearPath, `${songId}.json`);
+            const songData = readFileSync(songPath, 'utf-8');
+            const song: Song = JSON.parse(songData);
+            songs.push(song);
+          } catch (error) {
+            console.warn(
+              `Failed to load song ${songId} from year ${year}:`,
+              error,
+            );
+          }
+        }
       } catch (error) {
-        console.warn(`Failed to load song ${songId} from year ${year}:`, error);
+        console.warn(`Failed to read song directory for year ${year}:`, error);
       }
     }
+  } catch (error) {
+    console.warn('Failed to read songs base directory:', error);
   }
 
   // Load artists data from individual files organized by debut year
-  const artistYears = ['2010', '2012', '2013', '2019'];
-  const artistsByYear: { [key: string]: string[] } = {
-    '2010': ['lisa'],
-    '2012': ['kenshi-yonezu'],
-    '2013': ['bts'],
-    '2019': ['yoasobi'],
-  };
-
   const artists: Artist[] = [];
 
-  for (const year of artistYears) {
-    const artistIds = artistsByYear[year] || [];
+  try {
+    const artistsBasePath = resolve('./public/data/artists');
+    const { readdirSync } = await import('fs');
+    const yearDirectories = readdirSync(artistsBasePath, {
+      withFileTypes: true,
+    })
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) => dirent.name);
 
-    for (const artistId of artistIds) {
+    for (const year of yearDirectories) {
       try {
-        const artistPath = resolve(
-          `./public/data/artists/${year}/${artistId}.json`,
-        );
-        const artistData = readFileSync(artistPath, 'utf-8');
-        const artist: Artist = JSON.parse(artistData);
-        artists.push(artist);
+        const yearPath = resolve(artistsBasePath, year);
+        const artistFiles = readdirSync(yearPath, { withFileTypes: true })
+          .filter((dirent) => dirent.isFile() && dirent.name.endsWith('.json'))
+          .map((dirent) => dirent.name.replace('.json', ''));
+
+        for (const artistId of artistFiles) {
+          try {
+            const artistPath = resolve(yearPath, `${artistId}.json`);
+            const artistData = readFileSync(artistPath, 'utf-8');
+            const artist: Artist = JSON.parse(artistData);
+            artists.push(artist);
+          } catch (error) {
+            console.warn(
+              `Failed to load artist ${artistId} from year ${year}:`,
+              error,
+            );
+          }
+        }
       } catch (error) {
         console.warn(
-          `Failed to load artist ${artistId} from year ${year}:`,
+          `Failed to read artist directory for year ${year}:`,
           error,
         );
       }
     }
+  } catch (error) {
+    console.warn('Failed to read artists base directory:', error);
   }
 
   return songs.map((song) => ({

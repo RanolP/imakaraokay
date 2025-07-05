@@ -1,50 +1,12 @@
 /// <reference types="astro/client" />
 import type { APIRoute } from 'astro';
+import { SearchEngine } from '@imakaraokay/shared/search';
+import { YouTubeAutocompleteProvider, Logger } from '@imakaraokay/shared';
 
 // Only allow this endpoint in development
 const isDev = process.env.NODE_ENV !== 'production';
 if (!isDev) {
   throw new Error('API endpoints are only available in development mode');
-}
-
-async function fetchYouTubeAutocomplete(query: string, client: string = 'firefox', ds: string = 'yt'): Promise<any> {
-  const params = new URLSearchParams({
-    client,
-    ds,
-    q: query
-  });
-  
-  const url = `http://suggestqueries.google.com/complete/search?${params.toString()}`;
-  
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    
-    const text = await response.text();
-    
-    // Try to parse as JSON directly first
-    try {
-      return JSON.parse(text);
-    } catch {
-      // If that fails, try to extract JSON from JSONP format
-      const jsonMatch = text.match(/\[.*\]/);
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
-      }
-      
-      throw new Error('Invalid response format');
-    }
-  } catch (error) {
-    console.error('YouTube autocomplete fetch error:', error);
-    throw error;
-  }
 }
 
 export const GET: APIRoute = async ({ url }) => {
@@ -61,9 +23,6 @@ export const GET: APIRoute = async ({ url }) => {
 
   try {
     const q = url.searchParams.get('q') || '';
-    const client = url.searchParams.get('client') || 'firefox';
-    const ds = url.searchParams.get('ds') || 'yt';
-    
     const query = decodeURIComponent(q);
 
     if (!query.trim()) {
@@ -71,10 +30,22 @@ export const GET: APIRoute = async ({ url }) => {
       return new Response(JSON.stringify(emptyResponse), { headers });
     }
 
-    // Fetch suggestions from YouTube autocomplete API
-    const suggestions = await fetchYouTubeAutocomplete(query, client, ds);
+    // Initialize logger and search engine
+    const logger = new Logger();
+    const searchEngine = new SearchEngine(logger);
     
-    return new Response(JSON.stringify(suggestions), { headers });
+    // Add YouTube autocomplete provider
+    const youtubeProvider = new YouTubeAutocompleteProvider(logger);
+    searchEngine.addAutocompleteProvider(youtubeProvider);
+
+    // Get autocomplete suggestions
+    const autocompleteResults = await searchEngine.getAutocompleteSuggestions(query);
+    
+    // Convert to YouTube autocomplete API format for compatibility
+    const suggestions = autocompleteResults.suggestions.map(result => result.suggestion);
+    const response = [query, suggestions, [], {}];
+    
+    return new Response(JSON.stringify(response), { headers });
 
   } catch (error) {
     console.error('Autocomplete API error:', error);
