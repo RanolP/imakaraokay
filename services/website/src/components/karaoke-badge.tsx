@@ -90,8 +90,6 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
 
   const colors = getMachineColors(props.machine);
 
-  console.log(colors)
-
   return (
     <button
       onClick={copyToClipboard}
