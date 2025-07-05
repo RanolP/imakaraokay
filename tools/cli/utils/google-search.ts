@@ -1,5 +1,6 @@
-import * as cheerio from 'cheerio';
+import { search, ResultTypes } from 'google-sr';
 import { safeFetch } from './fetch-utils.js';
+import * as cheerio from 'cheerio';
 import { Logger } from './logger.js';
 
 export interface GoogleSearchResult {
@@ -13,7 +14,7 @@ export class GoogleSearchService {
   constructor(private logger: Logger) {}
 
   /**
-   * Search Bing with domain filtering (more reliable than DuckDuckGo for HTML parsing)
+   * Search Google with domain filtering using google-sr library
    * @param query The search query
    * @param domain The domain to filter results to (e.g., 'vocaro.wikidot.com')
    * @param maxResults Maximum number of results to return (default: 5)
@@ -23,168 +24,48 @@ export class GoogleSearchService {
     domain: string, 
     maxResults: number = 5
   ): Promise<GoogleSearchResult[]> {
-    this.logger.log(`Searching Bing for "${query}" on domain ${domain}`);
+    this.logger.log(`Searching Google for "${query}" on domain ${domain}`);
     
     const results: GoogleSearchResult[] = [];
     
     try {
-      // Construct Bing search URL with site: operator for domain filtering
-      const encodedQuery = encodeURIComponent(`${query} site:${domain}`);
-      const searchUrl = `https://www.bing.com/search?q=${encodedQuery}&count=${Math.min(maxResults * 2, 20)}`;
+      // Construct search query with site: operator for domain filtering
+      const searchQuery = `${query} site:${domain}`;
       
-      this.logger.log(`Bing search URL: ${searchUrl}`);
+      this.logger.log(`Google search query: ${searchQuery}`);
       
-      const response = await safeFetch(searchUrl, {
-        headers: {
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-          'Accept-Language': 'en-US,en;q=0.5',
-          'Accept-Encoding': 'gzip, deflate',
-          'DNT': '1',
-          'Connection': 'keep-alive',
-          'Upgrade-Insecure-Requests': '1',
-        }
+            // Use google-sr to search
+      const searchResults = await search({
+        query: searchQuery,
       });
       
-      if (!response.ok) {
-        throw new Error(`Bing search failed with status: ${response.status}`);
-      }
+      this.logger.log(`Found ${searchResults.length} total search results`);
       
-      const html = await response.text();
-      const $ = cheerio.load(html);
-      
-      // Debug: Log some information about the page
-      this.logger.log(`Bing page title: ${$('title').text()}`);
-      this.logger.log(`Found ${$('a').length} total links on the page`);
-      
-      // Debug: Log domain-specific links found (only first few for brevity)
-      const domainLinks = $(`a[href*="${domain}"]`);
-      this.logger.log(`Found ${domainLinks.length} links containing domain ${domain}`);
-      
-      // Parse Bing search results
-      // Bing has more reliable HTML structure than DuckDuckGo
-      const selectors = [
-        '.b_algo h2 a',                  // Bing main result titles
-        '.b_title a',                    // Alternative Bing selector
-        '.b_algo .b_title a',            // More specific Bing selector
-        'h2 a[href*="' + domain + '"]',  // Generic approach for domain-specific links
-        'a[href*="' + domain + '"]',     // Fallback: any link containing the domain
-      ];
-      
-      let foundResults = false;
-      
-      for (const selector of selectors) {
-        if (foundResults) break;
+      // Filter and process results
+      let validResults = 0;
+      for (const result of searchResults) {
+        if (validResults >= maxResults) break;
         
-        $(selector).each((_, elem) => {
-          if (results.length >= maxResults) return false;
-          
-          const $elem = $(elem);
-          
-          // For DuckDuckGo, the element itself is usually the link
-          const title = $elem.text().trim();
-          const href = $elem.attr('href');
-          
-          if (!title || !href) return;
-          
-          // Clean up Bing's redirect URLs
-          let cleanUrl = href;
-          if (href.startsWith('/aclk?') || href.includes('bing.com/ck/')) {
-            // Bing redirect format: extract actual URL
-            const urlMatch = href.match(/&u=([^&]+)/) || href.match(/url=([^&]+)/);
-            if (urlMatch) {
-              cleanUrl = decodeURIComponent(urlMatch[1]);
-            }
-          }
-          
-          // Skip Bing internal URLs
-          if (cleanUrl.startsWith('/') || cleanUrl.includes('bing.com')) return;
+        if (result.type === ResultTypes.OrganicResult) {
+          const organicResult = result as any;
           
           // Verify the URL is from the target domain
-          if (!cleanUrl.includes(domain)) return;
-          
-          // Find the snippet/description for Bing
-          const $resultContainer = $elem.closest('.b_algo, .b_caption');
-          let snippet = '';
-          
-          // Try Bing snippet selectors
-          const snippetSelectors = [
-            '.b_caption p',         // Bing main snippet
-            '.b_snippet',           // Alternative Bing snippet
-            '.b_caption',           // Caption area
-            '.b_descript',          // Description area
-          ];
-          
-          for (const snippetSelector of snippetSelectors) {
-            const $snippet = $resultContainer.find(snippetSelector).first();
-            if ($snippet.length) {
-              snippet = $snippet.text().trim();
-              break;
-            }
-          }
-          
-          // If no snippet found, try to find any descriptive text
-          if (!snippet) {
-            $resultContainer.find('span, div').each((_, span) => {
-              const text = $(span).text().trim();
-              if (text.length > 50 && text.length < 300 && !text.includes('http')) {
-                snippet = text;
-                return false; // break
-              }
-            });
-          }
-          
-          results.push({
-            title,
-            url: cleanUrl,
-            snippet: snippet || 'No description available',
-            domain: domain
-          });
-          
-          foundResults = true;
-        });
-      }
-      
-      // If no results found with structured selectors, try a more general approach
-      if (results.length === 0) {
-        this.logger.log(`No results found with structured selectors, trying general approach`);
-        $('a').each((_, elem) => {
-          if (results.length >= maxResults) return false;
-          
-          const $elem = $(elem);
-          const href = $elem.attr('href');
-          const text = $elem.text().trim();
-          
-          if (!href || !text || text.length < 5) return;
-          
-          // Clean up Bing's redirect URLs
-          let cleanUrl = href;
-          if (href.startsWith('/aclk?') || href.includes('bing.com/ck/')) {
-            // Bing redirect format: extract actual URL
-            const urlMatch = href.match(/&u=([^&]+)/) || href.match(/url=([^&]+)/);
-            if (urlMatch) {
-              cleanUrl = decodeURIComponent(urlMatch[1]);
-            }
-          }
-          
-          // Skip Bing internal URLs
-          if (cleanUrl.startsWith('/') || cleanUrl.includes('bing.com')) return;
-          
-          // Verify the URL is from the target domain and looks like a valid result
-          if (cleanUrl.includes(domain)) {
+          if (organicResult.link && organicResult.link.includes(domain)) {
             results.push({
-              title: text,
-              url: cleanUrl,
-              snippet: 'Found via general search',
+              title: organicResult.title || 'No title',
+              url: organicResult.link,
+              snippet: organicResult.description || 'No description available',
               domain: domain
             });
+            validResults++;
           }
-        });
+        }
       }
       
-      this.logger.log(`Found ${results.length} Bing search results for domain ${domain}`);
+      this.logger.log(`Found ${results.length} Google search results for domain ${domain}`);
       
     } catch (error) {
-      this.logger.log(`Error performing Bing search: ${error}`);
+      this.logger.log(`Error performing Google search: ${error}`);
       throw error;
     }
     

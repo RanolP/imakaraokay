@@ -20,9 +20,9 @@ export class VocaroProvider implements LyricsProvider {
       // Step 1: Try the direct Vocaro Wiki search first
       results = await this.directVocaroSearch(query);
       
-      // Step 2: If direct search fails or returns few results, use Bing search as fallback
+      // Step 2: If direct search fails or returns few results, use Google search as fallback
       if (results.length < 3) {
-        this.logger.log(`Direct search returned ${results.length} results, trying Bing search as fallback`);
+        this.logger.log(`Direct search returned ${results.length} results, trying Google search as fallback`);
         const googleResults = await this.googleSearchFallback(query);
         
         // Merge results, avoiding duplicates
@@ -122,7 +122,7 @@ export class VocaroProvider implements LyricsProvider {
 
   private async googleSearchFallback(query: string): Promise<LyricsResult[]> {
     try {
-      this.logger.log(`Performing Bing search for "${query}" on vocaro.wikidot.com`);
+      this.logger.log(`Performing Google search for "${query}" on vocaro.wikidot.com`);
       
       const googleResults = await this.googleSearch.searchWithDomainFilter(
         query, 
@@ -137,11 +137,11 @@ export class VocaroProvider implements LyricsProvider {
         artist: undefined // Will be filled in during investigation
       }));
       
-      this.logger.log(`Found ${results.length} results from Bing search fallback`);
+      this.logger.log(`Found ${results.length} results from Google search fallback`);
       return results;
       
     } catch (error) {
-      this.logger.log(`Error in Bing search fallback: ${error}`);
+      this.logger.log(`Error in Google search fallback: ${error}`);
       return [];
     }
   }
