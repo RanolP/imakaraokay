@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ClickableTitleVariant from '../../components/clickable-title-variant';
 import KaraokeBadges from '../../components/karaoke-badges';
-import type { Song } from '../../types/song';
+import type { Song, Artist } from '../../types/song';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -32,17 +32,66 @@ export async function getStaticPaths() {
     }
   }
 
+  // Load artists data from individual files organized by debut year
+  const artistYears = ['2010', '2012', '2013', '2019'];
+  const artistsByYear: { [key: string]: string[] } = {
+    '2010': ['lisa'],
+    '2012': ['kenshi-yonezu'],
+    '2013': ['bts'],
+    '2019': ['yoasobi'],
+  };
+
+  const artists: Artist[] = [];
+
+  for (const year of artistYears) {
+    const artistIds = artistsByYear[year] || [];
+
+    for (const artistId of artistIds) {
+      try {
+        const artistPath = resolve(
+          `./public/data/artists/${year}/${artistId}.json`,
+        );
+        const artistData = readFileSync(artistPath, 'utf-8');
+        const artist: Artist = JSON.parse(artistData);
+        artists.push(artist);
+      } catch (error) {
+        console.warn(
+          `Failed to load artist ${artistId} from year ${year}:`,
+          error,
+        );
+      }
+    }
+  }
+
   return songs.map((song) => ({
     params: { id: song.id },
-    props: { song },
+    props: { song, artists },
   }));
 }
 
 interface Props {
   song: Song;
+  artists: Artist[];
 }
 
-const { song } = Astro.props;
+const { song, artists } = Astro.props;
+
+// Helper function to get localized artist name
+const getArtistDisplayName = (
+  artistId: string,
+  preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original',
+): string => {
+  const artist = artists.find((a) => a.id === artistId);
+  if (!artist) return artistId;
+
+  if (preferredLang !== 'original' && artist.name[preferredLang]) {
+    const langName = artist.name[preferredLang];
+    if (langName && typeof langName === 'object' && 'main' in langName) {
+      return langName.main;
+    }
+  }
+  return artist.name.original;
+};
 
 // Generate title and description for SEO
 const songTitle =
@@ -98,7 +147,23 @@ const structuredData = {
             <!-- Artists -->
             <div class="mt-2">
               <span class="text-sm opacity-75">Artists:</span>
-              <span class="ml-2 text-lg">{song.artists.join(', ')}</span>
+              <span class="ml-2 text-lg">
+                {
+                  song.artists.map((artistId, index) => (
+                    <>
+                      <a
+                        href={`/artists/${artistId}`}
+                        class="text-white hover:text-blue-200 underline decoration-1 underline-offset-2 hover:decoration-2 transition-all"
+                      >
+                        {getArtistDisplayName(artistId, 'original')}
+                      </a>
+                      {index < song.artists.length - 1 && (
+                        <span class="text-white">, </span>
+                      )}
+                    </>
+                  ))
+                }
+              </span>
             </div>
           </div>
         </div>
