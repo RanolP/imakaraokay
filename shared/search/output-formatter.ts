@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { SearchResults } from './search-engine.js';
-import { EnhancedLyricsResult } from './providers/vocaro-provider.js';
+import { EnhancedLyricsResult } from '../providers/vocaro-provider.js';
 
 export class OutputFormatter {
   formatResults(query: string, results: SearchResults) {

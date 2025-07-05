@@ -3,15 +3,15 @@
 import { parseArgs } from 'node:util';
 import chalk from 'chalk';
 
-import { Logger } from './utils/logger.js';
-import { SearchEngine } from './search-engine.js';
-import { OutputFormatter } from './output-formatter.js';
+import { Logger } from '../utils/logger.js';
+import { SearchEngine } from '../search/search-engine.js';
+import { OutputFormatter } from '../search/output-formatter.js';
 
 // Import providers
-import { TJKaraokeProvider } from './providers/tj-karaoke-provider.js';
-import { KYKaraokeProvider } from './providers/ky-karaoke-provider.js';
-import { MusixMatchProvider } from './providers/musixmatch-provider.js';
-import { VocaroProvider } from './providers/vocaro-provider.js';
+import { TJKaraokeProvider } from '../providers/tj-karaoke-provider.js';
+import { KYKaraokeProvider } from '../providers/ky-karaoke-provider.js';
+import { MusixMatchProvider } from '../providers/musixmatch-provider.js';
+import { VocaroProvider } from '../providers/vocaro-provider.js';
 
 // Parse command line arguments
 const { values, positionals } = parseArgs({

@@ -1,5 +1,5 @@
-import { KaraokeProvider, LyricsProvider, KaraokeResult, LyricsResult } from './types/search-types.js';
-import { Logger } from './utils/logger.js';
+import { KaraokeProvider, LyricsProvider, KaraokeResult, LyricsResult } from '../types/search-types.js';
+import { Logger } from '../utils/logger.js';
 
 export interface SearchResults {
   karaoke: KaraokeResult[];
