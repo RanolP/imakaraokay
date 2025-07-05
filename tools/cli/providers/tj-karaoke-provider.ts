@@ -10,7 +10,7 @@ export class TJKaraokeProvider implements KaraokeProvider {
 
   async search(query: string): Promise<KaraokeResult[]> {
     this.logger.log(`Searching TJ Karaoke for: ${query}`);
-    let results: KaraokeResult[] = [];
+    const results: KaraokeResult[] = [];
     
     try {
       // Use the working TJ Media website with full parameters
@@ -28,70 +28,51 @@ export class TJKaraokeProvider implements KaraokeProvider {
         const html = await response.text();
         const $ = cheerio.load(html);
         
-        // Parse the song results from the TJ Media website
-        // Looking for structure like: 곡번호24518 MV Blueming IU 아이유 이종훈,이채규,아이유
+        // Parse the song results using the proper structure
+        // Each song is in a ul.grid-container.list.ico element
+        const songContainers = $('ul.grid-container.list.ico');
         
-        // Find all elements containing song numbers
-        const songElements = $('li, tr, div').filter((_, elem) => {
-          const text = $(elem).text();
-          return text.includes('곡번호') && /곡번호\d+/.test(text);
-        });
-        
-        const processedIds = new Set<string>();
-        
-        songElements.each((_, elem) => {
-          const $elem = $(elem);
-          const fullText = $elem.text().trim();
+        songContainers.each((_, container) => {
+          const $container = $(container);
           
-          // Skip if this is a parent element containing already processed songs
-          const songNumMatches = fullText.match(/곡번호(\d+)/g);
-          if (songNumMatches && songNumMatches.length > 1) {
-            return; // Skip parent elements containing multiple songs
-          }
-          
-          // Extract song number
-          const idMatch = fullText.match(/곡번호(\d+)/);
-          if (!idMatch) return;
-          
-          const id = idMatch[1];
-          if (processedIds.has(id)) return;
-          
-          // Find the song title and artist
-          // The structure after 곡번호 can be: MV/MR Title Artist KoreanArtist Composers
-          let remainingText = fullText.substring(fullText.indexOf(id) + id.length).trim();
-          
-          // Clean up MV/MR markers
-          remainingText = remainingText.replace(/\s*(MV|MR)\s*/g, ' ').trim();
-          
-          // Split by whitespace and filter empty strings
-          const parts = remainingText.split(/\s+/).filter(p => p.length > 0);
-          
-          if (parts.length >= 2) {
-            // First non-MV/MR part is the title
-            const title = parts[0];
+          try {
+            // Extract song number from li.grid-item.center.pos-type .num2
+            const songNumberElem = $container.find('li.grid-item.center.pos-type .num2');
+            const id = songNumberElem.text().trim();
             
-            // Second part is usually the artist (English name)
-            const artist = parts[1];
+            if (!id) return; // Skip if no song number found
             
-            // Check if this looks like a valid result
-            if (title && artist && !title.includes('곡') && !artist.includes('작')) {
-              processedIds.add(id);
+            // Extract title from li.grid-item.title3 p span
+            const titleElem = $container.find('li.grid-item.title3 p span');
+            const title = titleElem.text().trim();
+            
+            // Extract artist from li.grid-item.title4.singer p span
+            const artistElem = $container.find('li.grid-item.title4.singer p span');
+            const artist = artistElem.text().trim();
+            
+            // Validate the extracted data
+            if (title && title.length > 0) {
               results.push({
                 id,
                 title,
-                artist,
+                artist: artist || undefined,
                 source: 'TJ'
               });
             }
+          } catch (error) {
+            this.logger.log(`Error parsing song container: ${error}`);
           }
         });
         
-        // Limit results to avoid duplicates
-        results = results.reduce((acc, curr) => {
+        // Remove duplicates based on ID
+        const uniqueResults = results.reduce((acc, curr) => {
           const exists = acc.find(r => r.id === curr.id);
           if (!exists) acc.push(curr);
           return acc;
         }, [] as KaraokeResult[]);
+        
+        results.length = 0;
+        results.push(...uniqueResults);
       }
       
       this.logger.log(`Found ${results.length} results from TJ Karaoke`);

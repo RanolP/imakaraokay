@@ -10,7 +10,7 @@ export class KYKaraokeProvider implements KaraokeProvider {
 
   async search(query: string): Promise<KaraokeResult[]> {
     this.logger.log(`Searching KY Karaoke for: ${query}`);
-    let results: KaraokeResult[] = [];
+    const results: KaraokeResult[] = [];
     
     try {
       // Use the working KY singing website
@@ -27,90 +27,51 @@ export class KYKaraokeProvider implements KaraokeProvider {
         const html = await response.text();
         const $ = cheerio.load(html);
         
-        // Parse KY search results - look for actual song entries
-        // Filter out navigation and UI elements
-        const songElements = $('*').filter((_, elem) => {
-          const text = $(elem).text().trim();
-          const hasNumber = /\d{5,6}/.test(text);
-          const isNavigation = text.includes('콘텐츠로') || text.includes('고객센터') || 
-                             text.includes('메뉴') || text.includes('검색') ||
-                             text.includes('로그인') || text.includes('회원가입') ||
-                             text.length < 5;
-          
-          return hasNumber && !isNavigation && text.length > 10;
-        });
+        // Parse KY search results using the correct structure
+        // Each song is in a ul.search_chart_list element
+        const songLists = $('ul.search_chart_list');
         
-        const processedIds = new Set<string>();
-        
-        songElements.each((_, elem) => {
-          const $elem = $(elem);
-          const fullText = $elem.text().trim();
+        songLists.each((_, songList) => {
+          const $songList = $(songList);
           
-          // Skip if this contains multiple song numbers (likely a parent element)
-          const numberMatches = fullText.match(/\d{5,6}/g);
-          if (!numberMatches || numberMatches.length > 1) return;
-          
-          // Look for KY song number pattern (usually 5-6 digits)
-          const idMatch = fullText.match(/(\d{5,6})/);
-          if (!idMatch) return;
-          
-          const id = idMatch[1];
-          if (processedIds.has(id)) return;
-          
-          // Extract title and artist - remove the ID first
-          let remainingText = fullText.replace(id, '').trim();
-          
-          // Clean up common prefixes/suffixes
-          remainingText = remainingText.replace(/^[-\s]+|[\s]+$/g, '');
-          
-          // Try different splitting patterns for KY format
-          let title = '';
-          let artist = '';
-          
-          // Pattern 1: "Title - Artist" or "Title Artist"
-          if (remainingText.includes(' - ')) {
-            const parts = remainingText.split(' - ');
-            title = parts[0].trim();
-            artist = parts[1] ? parts[1].trim() : '';
-          } else if (remainingText.includes('  ')) {
-            // Pattern 2: "Title  Artist" (double space)
-            const parts = remainingText.split(/\s{2,}/);
-            title = parts[0].trim();
-            artist = parts[1] ? parts[1].trim() : '';
-          } else {
-            // Pattern 3: Just take the remaining text as title
-            const words = remainingText.split(/\s+/);
-            if (words.length >= 2) {
-              title = words[0];
-              artist = words.slice(1).join(' ');
-            } else {
-              title = remainingText;
-            }
-          }
-          
-          // Validate the extracted data
-          if (title && title.length > 0 && 
-              !title.includes('KYSing') && 
-              !title.includes('고객') &&
-              !title.includes('센터') &&
-              !/^\d+$/.test(title)) {
+          try {
+            // Extract song number from li.search_chart_num
+            const songNumElem = $songList.find('li.search_chart_num');
+            const id = songNumElem.text().trim();
             
-            processedIds.add(id);
-            results.push({
-              id,
-              title,
-              artist: artist || undefined,
-              source: 'KY'
-            });
+            if (!id || !/^\d+$/.test(id)) return; // Skip if no valid song number
+            
+            // Extract title from li.search_chart_tit span.tit (first span, not mo-art)
+            const titleElem = $songList.find('li.search_chart_tit span.tit:not(.mo-art)');
+            const title = titleElem.text().trim();
+            
+            // Extract artist from li.search_chart_sng
+            const artistElem = $songList.find('li.search_chart_sng');
+            const artist = artistElem.text().trim();
+            
+            // Validate the extracted data
+            if (title && title.length > 0 && this.isValidKYResult(title, artist, id)) {
+              results.push({
+                id,
+                title,
+                artist: artist || undefined,
+                source: 'KY'
+              });
+            }
+          } catch (error) {
+            this.logger.log(`Error parsing song list: ${error}`);
           }
         });
         
-        // Deduplicate results
-        results = results.reduce((acc, curr) => {
+        // Remove duplicates based on ID
+        const uniqueResults = results.reduce((acc, curr) => {
           const exists = acc.find(r => r.id === curr.id);
           if (!exists) acc.push(curr);
           return acc;
         }, [] as KaraokeResult[]);
+        
+        results.length = 0;
+        results.push(...uniqueResults);
       }
       
       this.logger.log(`Found ${results.length} results from KY Karaoke`);
@@ -120,5 +81,16 @@ export class KYKaraokeProvider implements KaraokeProvider {
     }
     
     return results;
+  }
+  
+  private isValidKYResult(title: string, artist: string, id: string): boolean {
+    return title.length > 0 && 
+           !title.includes('KYSing') && 
+           !title.includes('고객') &&
+           !title.includes('센터') &&
+           !title.includes('키싱') &&
+           !/^\d+$/.test(title) &&
+           id.length >= 4 &&
+           (!artist || artist.length > 0); // Validate artist if provided
   }
 } 
