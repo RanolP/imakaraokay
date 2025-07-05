@@ -40,6 +40,9 @@ importers:
       astro-i18next:
         specifier: 1.0.0-beta.21
         version: 1.0.0-beta.21(astro@5.10.2(@types/node@22.15.34)(jiti@2.4.2)(rollup@4.44.1)(tsx@4.20.3)(typescript@5.8.3)(yaml@2.6.1))
+      cheerio:
+        specifier: ^1.1.0
+        version: 1.1.0
       fuse.js:
         specifier: ^7.0.0
         version: 7.1.0
