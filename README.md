@@ -1,6 +1,6 @@
 # imakaraokay (今からオケー)
 
-A comprehensive karaoke song search platform built as a monorepo with multiple services and tools.
+A karaoke song search website built with Astro and Solid.js.
 
 ## 🎤 What is imakaraokay?
 
@@ -19,8 +19,6 @@ imakaraokay/
 │   └── website/          # Main Astro + Solid.js website
 ├── packages/
 │   └── shared/           # Shared utilities and types
-├── tools/
-│   └── cli/              # Karaoke search CLI tool
 └── docs/                 # Documentation (if needed)
 ```
 
@@ -49,9 +47,6 @@ pnpm dev
 
 # Start all services in development mode
 pnpm dev:all
-
-# Use the CLI tool
-pnpm search "song name"
 ```
 
 ### Building
@@ -74,10 +69,6 @@ pnpm build:all
 
 - **@imakaraokay/shared** - Shared utilities, types, and constants used across services
 
-### Tools
-
-- **@imakaraokay/cli** - Command-line tool for searching karaoke songs
-
 ## 🛠 Technologies
 
 - **Frontend**: Astro, Solid.js, UnoCSS
@@ -95,7 +86,6 @@ pnpm build:all
 - **Responsive Design**: Modern UI with karaoke-themed color palette
 - **Internationalization**: Korean (primary) and English support
 - **Static Generation**: Pre-generated pages for optimal performance
-- **CLI Tool**: Command-line interface for quick searches
 
 ## 🌈 Karaoke Machine Support
 
@@ -116,9 +106,6 @@ pnpm dev:all          # Start all services in dev mode
 # Building
 pnpm build            # Build website
 pnpm build:all        # Build all packages
-
-# CLI
-pnpm search "query"   # Search for karaoke songs
 
 # Maintenance
 pnpm clean            # Clean all build outputs

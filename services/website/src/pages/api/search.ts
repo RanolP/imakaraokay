@@ -1,11 +1,6 @@
 /// <reference types="astro/client" />
 import type { APIRoute } from 'astro';
-import { TJKaraokeProvider } from '../../lib/cli/providers/tj-karaoke-provider.js';
-import { KYKaraokeProvider } from '../../lib/cli/providers/ky-karaoke-provider.js';
-import { VocaroProvider } from '../../lib/cli/providers/vocaro-provider.js';
-import { MusixMatchProvider } from '../../lib/cli/providers/musixmatch-provider.js';
-import { Logger } from '../../lib/cli/utils/logger.js';
-import { SearchEngine } from '../../lib/cli/search-engine.js';
+import { TJKaraokeProvider, KYKaraokeProvider, VocaroProvider, MusixMatchProvider, Logger, SearchEngine } from '@imakaraokay/shared';
 
 // Only allow this endpoint in development
 const isDev = process.env.NODE_ENV !== 'production';

@@ -9,7 +9,23 @@ importers:
   .: {}
 
   packages/shared:
+    dependencies:
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
+      cheerio:
+        specifier: ^1.1.0
+        version: 1.1.0
+      google-sr:
+        specifier: ^5.0.0
+        version: 5.0.0
+      undici:
+        specifier: ^7.11.0
+        version: 7.11.0
     devDependencies:
+      '@types/cheerio':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@types/node':
         specifier: ^22.10.2
         version: 22.15.34
@@ -89,46 +105,6 @@ importers:
       vite:
         specifier: ^5.4.19
         version: 5.4.19(@types/node@22.15.34)
-
-  tools/cli:
-    dependencies:
-      chalk:
-        specifier: ^5.4.1
-        version: 5.4.1
-      cheerio:
-        specifier: ^1.1.0
-        version: 1.1.0
-      fs-extra:
-        specifier: ^11.2.0
-        version: 11.3.0
-      google-sr:
-        specifier: ^5.0.0
-        version: 5.0.0
-      jsdom:
-        specifier: ^26.1.0
-        version: 26.1.0
-      undici:
-        specifier: ^7.11.0
-        version: 7.11.0
-    devDependencies:
-      '@types/cheerio':
-        specifier: ^1.0.0
-        version: 1.0.0
-      '@types/fs-extra':
-        specifier: ^11.0.4
-        version: 11.0.4
-      '@types/jsdom':
-        specifier: ^21.1.7
-        version: 21.1.7
-      '@types/node':
-        specifier: ^22.10.2
-        version: 22.15.34
-      tsx:
-        specifier: ^4.19.2
-        version: 4.20.3
-      typescript:
-        specifier: ^5.7.2
-        version: 5.8.3
 
 packages:
 
@@ -4606,6 +4582,7 @@ snapshots:
   get-tsconfig@4.10.1:
     dependencies:
       resolve-pkg-maps: 1.0.0
+    optional: true
 
   github-slugger@2.0.0: {}
 
@@ -5492,7 +5469,8 @@ snapshots:
       mdast-util-to-markdown: 2.1.2
       unified: 11.0.5
 
-  resolve-pkg-maps@1.0.0: {}
+  resolve-pkg-maps@1.0.0:
+    optional: true
 
   restructure@3.0.2: {}
 
@@ -5756,6 +5734,7 @@ snapshots:
       get-tsconfig: 4.10.1
     optionalDependencies:
       fsevents: 2.3.3
+    optional: true
 
   type-fest@4.41.0: {}
 
