@@ -6,7 +6,6 @@
     "dev": "pnpm -F website dev",
     "build": "pnpm -F website build",
     "preview": "pnpm -F website preview",
-    "search": "pnpm -F cli search",
     "build:all": "pnpm -r build",
     "dev:all": "pnpm -r dev",
     "clean": "pnpm -r clean && rm -rf node_modules",

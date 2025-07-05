@@ -29,7 +29,6 @@
   },
   "references": [
     { "path": "./services/website" },
-    { "path": "./tools/cli" },
     { "path": "./packages/shared" }
   ]
 } 
