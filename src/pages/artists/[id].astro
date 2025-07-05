@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import ClickableTitleVariant from '../../components/clickable-title-variant';
+import ClickableArtistVariant from '../../components/clickable-artist-variant';
 import SongListItem from '../../components/song-list-item';
 import type { Artist, Song } from '../../types/song';
 import { readFileSync } from 'fs';
@@ -138,11 +138,8 @@ const structuredData = {
                     class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
                 >
                     <div class="flex-1">
-                        <!-- Artist Name -->
-                        <h1 class="text-3xl md:text-4xl font-bold mb-2">
-                            <span class="text-purple-200">🎤</span>
-                            {artistName}
-                        </h1>
+                        <!-- Interactive artist name variant selector -->
+                        <ClickableArtistVariant artist={artist} client:load />
 
                         <!-- Artist Info -->
                         <div class="flex flex-wrap gap-4 text-sm opacity-90">
