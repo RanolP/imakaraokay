@@ -42,8 +42,8 @@ export class TJKaraokeProvider implements KaraokeProvider {
             
             if (!id) return; // Skip if no song number found
             
-            // Extract title from li.grid-item.title3 p span
-            const titleElem = $container.find('li.grid-item.title3 p span');
+            // Extract title from li.grid-item.title3 p span - try nested span first, then direct span
+            let titleElem = $container.find('li.grid-item.title3 p > span');
             const title = titleElem.text().trim();
             
             // Extract artist from li.grid-item.title4.singer p span
