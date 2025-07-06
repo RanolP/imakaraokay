@@ -28,4 +28,4 @@ export interface KaraokeProvider extends SearchProvider {
 
 export interface LyricsProvider extends SearchProvider {
   search(query: string): Promise<LyricsResult[]>;
-} 
+}

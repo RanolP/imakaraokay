@@ -4,13 +4,11 @@
     "original": "米津玄師",
     "japanese": {
       "main": "米津玄師",
-      "aliases": [
-        { "text": "よねづけんし" }
-      ]
+      "aliases": [{ "text": "よねづけんし" }]
     },
     "english": {
       "main": "Kenshi Yonezu"
     }
   },
   "debutDate": "2012-05-16"
-} 
+}

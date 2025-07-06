@@ -1,4 +1,4 @@
-import { Component, createSignal, onMount, For, Show, createEffect } from 'solid-js';
+import { type Component, createSignal, onMount, For, Show, createEffect } from 'solid-js';
 import type { Song, Artist } from '../types/song';
 
 interface AdminInterfaceProps {
@@ -115,7 +115,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       } else {
         setError(data.error || 'Failed to load songs');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to load songs');
     } finally {
       setLoading(false);
@@ -132,7 +132,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       } else {
         setError(data.error || 'Failed to load artists');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to load artists');
     } finally {
       setLoading(false);
@@ -146,7 +146,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       (song) =>
         song.id.toLowerCase().includes(query) ||
         song.title.original.toLowerCase().includes(query) ||
-        song.artists.some((artistId) => artistId.toLowerCase().includes(query))
+        song.artists.some((artistId) => artistId.toLowerCase().includes(query)),
     );
   };
 
@@ -156,7 +156,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
     return artists().filter(
       (artist) =>
         artist.id.toLowerCase().includes(query) ||
-        artist.name.original.toLowerCase().includes(query)
+        artist.name.original.toLowerCase().includes(query),
     );
   };
 
@@ -266,7 +266,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       } else {
         setError(result.error || 'Failed to save song');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to save song');
     } finally {
       setLoading(false);
@@ -292,7 +292,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       } else {
         setError(result.error || 'Failed to save artist');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to save artist');
     } finally {
       setLoading(false);
@@ -315,7 +315,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       } else {
         setError(result.error || 'Failed to delete song');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to delete song');
     } finally {
       setLoading(false);
@@ -338,7 +338,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       } else {
         setError(result.error || 'Failed to delete artist');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to delete artist');
     } finally {
       setLoading(false);
@@ -361,7 +361,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
 
   const addArtistToSong = () => {
     const newArtist = prompt('Enter artist ID:');
-    if (newArtist && newArtist.trim()) {
+    if (newArtist?.trim()) {
       setSongFormData((prev) => ({
         ...prev,
         artists: [...prev.artists, newArtist.trim()],

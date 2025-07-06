@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
-import { LyricsProvider, LyricsResult } from '../types/search-types.js';
+import type { LyricsProvider, LyricsResult } from '../types/search-types.js';
 import { safeFetch } from '../utils/fetch-utils.js';
-import { Logger } from '../utils/logger.js';
+import type { Logger } from '../utils/logger.js';
 
 export class MusixMatchProvider implements LyricsProvider {
   name = 'MusixMatch';

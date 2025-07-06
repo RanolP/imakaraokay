@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onMount } from 'solid-js';
+import { createSignal, createEffect } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import type { Language, TranslationKeys } from '../types';
 import { ko } from '../locales/ko';

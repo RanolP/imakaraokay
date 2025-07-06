@@ -1,15 +1,12 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import ClickableArtistVariant from '../../components/clickable-artist-variant';
-import SongListItem from '../../components/song-list-item';
 import type { Artist, Song } from '../../types/song';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const { readdirSync } = await import('fs');
+  const { readdirSync } = await import('node:fs');
   const artists: Artist[] = [];
   const songs: Song[] = [];
 
@@ -109,11 +106,11 @@ const { artist, songs } = Astro.props;
 
 // Generate title and description for SEO
 const artistName = typeof artist.name === 'string' ? artist.name : artist.name.original;
-const pageTitle = `${artistName} - Artist Profile`;
-const description = `Discover karaoke songs by ${artistName}. Find machine IDs for TJ, KY, and Joysound systems.`;
+const _pageTitle = `${artistName} - Artist Profile`;
+const _description = `Discover karaoke songs by ${artistName}. Find machine IDs for TJ, KY, and Joysound systems.`;
 
 // Generate structured data for SEO
-const structuredData = {
+const _structuredData = {
   '@context': 'https://schema.org',
   '@type': 'MusicGroup',
   name: artistName,

@@ -158,7 +158,7 @@ describe('searchKY', () => {
     expect(results.length).toBeGreaterThan(0);
 
     // At least some results should have lyrics content
-    const resultsWithLyrics = results.filter(r => r.lyricCont && r.lyricCont.length > 0);
+    const resultsWithLyrics = results.filter((r) => r.lyricCont && r.lyricCont.length > 0);
     expect(resultsWithLyrics.length).toBeGreaterThan(0);
   }, 30000);
 
@@ -228,4 +228,4 @@ describe('searchKY', () => {
     expect(typeof targetSong.composer).toBe('string');
     expect(targetSong.composer.length).toBeGreaterThan(0);
   }, 60000); // Longer timeout for specific search
-}); 
+});

@@ -15,11 +15,11 @@ export default defineConfig({
         'src/**/*.d.ts',
         '**/*.config.*',
         '**/*.test.*',
-        '**/*.spec.*'
-      ]
+        '**/*.spec.*',
+      ],
     },
     testTimeout: 10000,
     hookTimeout: 10000,
-    setupFiles: []
-  }
-}); 
+    setupFiles: [],
+  },
+});

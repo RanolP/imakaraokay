@@ -1,7 +1,7 @@
 import { search, ResultTypes } from 'google-sr';
 import { safeFetch } from './fetch-utils.js';
 import * as cheerio from 'cheerio';
-import { Logger } from './logger.js';
+import type { Logger } from './logger.js';
 
 export interface GoogleSearchResult {
   title: string;
@@ -22,7 +22,7 @@ export class GoogleSearchService {
   async searchWithDomainFilter(
     query: string,
     domain: string,
-    maxResults: number = 5
+    maxResults: number = 5,
   ): Promise<GoogleSearchResult[]> {
     this.logger.log(`Searching Google for "${query}" on domain ${domain}`);
 
@@ -50,7 +50,7 @@ export class GoogleSearchService {
           const organicResult = result as any;
 
           // Verify the URL is from the target domain
-          if (organicResult.link && organicResult.link.includes(domain)) {
+          if (organicResult.link?.includes(domain)) {
             results.push({
               title: organicResult.title || 'No title',
               url: organicResult.link,

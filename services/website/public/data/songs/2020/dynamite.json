@@ -4,9 +4,7 @@
     "original": "Dynamite",
     "japanese": {
       "main": "ダイナマイト",
-      "aliases": [
-        { "text": "だいなまいと" }
-      ]
+      "aliases": [{ "text": "だいなまいと" }]
     },
     "english": {
       "main": "Dynamite"
@@ -24,4 +22,4 @@
   },
   "releaseDate": "2020-08-21",
   "lyrics": "'Cause I, I, I'm in the stars tonight\nSo watch me bring the fire and set the night alight"
-} 
+}

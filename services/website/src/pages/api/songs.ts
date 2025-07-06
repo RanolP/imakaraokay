@@ -1,8 +1,15 @@
 /// <reference types="astro/client" />
 import type { APIRoute } from 'astro';
 import type { Song } from '../../types/song';
-import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
-import { resolve, dirname } from 'path';
+import {
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  unlinkSync,
+} from 'node:fs';
+import { resolve, dirname } from 'node:path';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -246,8 +253,8 @@ export const PUT: APIRoute = async ({ request }) => {
     // Prevent ID changes - ensure the ID matches the existing song
     if (song.id !== existingSong.id) {
       return new Response(
-        JSON.stringify({ error: 'Song ID cannot be changed. ID must remain: ' + existingSong.id }),
-        { status: 400, headers: CORS_HEADERS }
+        JSON.stringify({ error: `Song ID cannot be changed. ID must remain: ${existingSong.id}` }),
+        { status: 400, headers: CORS_HEADERS },
       );
     }
 

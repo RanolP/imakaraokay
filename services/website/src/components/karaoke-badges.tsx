@@ -1,4 +1,4 @@
-import { Component, For } from 'solid-js';
+import { type Component, For } from 'solid-js';
 import type { Song } from '../types/song';
 import KaraokeBadge from './karaoke-badge';
 

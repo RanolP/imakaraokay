@@ -181,7 +181,7 @@ export class SongService {
   // Helper methods to get display strings from multilingual content
   getDisplayTitle(
     song: Song,
-    preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original'
+    preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original',
   ): string {
     if (preferredLang !== 'original' && song.title[preferredLang]) {
       return song.title[preferredLang]!.main;
@@ -191,7 +191,7 @@ export class SongService {
 
   getDisplayArtist(
     artistId: string,
-    preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original'
+    preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original',
   ): string {
     const artist = this.getArtistById(artistId);
     if (!artist) return artistId;

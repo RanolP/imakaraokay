@@ -1,4 +1,4 @@
-import { Component, createSignal, onMount, onCleanup, Show, createMemo } from 'solid-js';
+import { type Component, createSignal, onMount, onCleanup, Show, createMemo } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 import type { Song } from '../types/song';
@@ -66,7 +66,7 @@ const ClickableTitleVariant: Component<ClickableTitleVariantProps> = (props) => 
   const getTitlePreview = (language: TitleLanguage): string => {
     const title = songService.getDisplayTitle(props.song, language);
     // Truncate if too long to keep dropdown manageable
-    return title.length > 40 ? title.substring(0, 37) + '...' : title;
+    return title.length > 40 ? `${title.substring(0, 37)}...` : title;
   };
 
   // Get aliases for the currently selected language

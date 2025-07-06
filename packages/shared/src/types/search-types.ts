@@ -56,7 +56,9 @@ export interface AutocompleteProvider {
  */
 export function tjResponseToKaraokeResult(tjResponse: TjResponse): KaraokeResult {
   // Convert title array to a single string
-  const title = tjResponse.title.map((part: { content: string; highlight: boolean }) => part.content).join('');
+  const title = tjResponse.title
+    .map((part: { content: string; highlight: boolean }) => part.content)
+    .join('');
 
   return {
     id: tjResponse.id.toString(),

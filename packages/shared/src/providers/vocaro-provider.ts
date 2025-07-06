@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
-import { LyricsProvider, LyricsResult, KaraokeResult } from '../types/search-types.js';
+import type { LyricsProvider, LyricsResult, KaraokeResult } from '../types/search-types.js';
 import { safeFetch } from '../utils/fetch-utils.js';
-import { Logger } from '../utils/logger.js';
+import type { Logger } from '../utils/logger.js';
 import { GoogleSearchService } from '../utils/google-search.js';
 
 // Import TJ and KY providers for cross-search functionality
@@ -37,7 +37,7 @@ export class VocaroProvider implements LyricsProvider {
       // Step 2: Check if query contains Korean and if we have exact matches
       if (this.containsKorean(query) && results.length > 0) {
         this.logger.log(
-          'Korean query detected with Vocaro results, attempting Japanese title extraction and karaoke search'
+          'Korean query detected with Vocaro results, attempting Japanese title extraction and karaoke search',
         );
         results = await this.enhanceWithKaraokeSearch(results, query);
       }
@@ -45,7 +45,7 @@ export class VocaroProvider implements LyricsProvider {
       // Step 3: If direct search fails or returns few results, use Google search as fallback
       if (results.length < 3) {
         this.logger.log(
-          `Direct search returned ${results.length} results, trying Google search as fallback`
+          `Direct search returned ${results.length} results, trying Google search as fallback`,
         );
         const googleResults = await this.googleSearchFallback(query);
 
@@ -63,7 +63,7 @@ export class VocaroProvider implements LyricsProvider {
         // Merge with existing results, avoiding duplicates
         const existingUrls = new Set(results.map((r) => r.url));
         const newDirectResults = directResults.filter(
-          (r: LyricsResult) => !existingUrls.has(r.url)
+          (r: LyricsResult) => !existingUrls.has(r.url),
         );
         results = [...results, ...newDirectResults];
       }
@@ -73,7 +73,7 @@ export class VocaroProvider implements LyricsProvider {
       const investigatedResults = await this.investigateResults(topResults);
 
       this.logger.log(
-        `Final result: ${investigatedResults.length} validated results from Vocaro Wiki`
+        `Final result: ${investigatedResults.length} validated results from Vocaro Wiki`,
       );
       return investigatedResults;
     } catch (error) {
@@ -158,7 +158,7 @@ export class VocaroProvider implements LyricsProvider {
       const googleResults = await this.googleSearch.searchWithDomainFilter(
         query,
         'vocaro.wikidot.com',
-        5
+        5,
       );
 
       const results: LyricsResult[] = googleResults.map((result) => ({
@@ -193,7 +193,7 @@ export class VocaroProvider implements LyricsProvider {
             title: investigation.songTitle || investigation.title || result.title,
             artist: investigation.artist || result.artist,
             // Add additional metadata if found
-            ...(investigation.lyrics && { lyrics: investigation.lyrics.substring(0, 200) + '...' }),
+            ...(investigation.lyrics && { lyrics: `${investigation.lyrics.substring(0, 200)}...` }),
           };
         }
 
@@ -277,7 +277,7 @@ export class VocaroProvider implements LyricsProvider {
    */
   private async enhanceWithKaraokeSearch(
     results: LyricsResult[],
-    originalQuery: string
+    originalQuery: string,
   ): Promise<LyricsResult[]> {
     const enhancedResults: LyricsResult[] = [];
 
@@ -430,7 +430,7 @@ export class VocaroProvider implements LyricsProvider {
 
       const allResults = [...tjResults, ...kyResults];
       this.logger.log(
-        `Found ${allResults.length} karaoke results (TJ: ${tjResults.length}, KY: ${kyResults.length})`
+        `Found ${allResults.length} karaoke results (TJ: ${tjResults.length}, KY: ${kyResults.length})`,
       );
 
       return allResults;

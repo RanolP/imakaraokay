@@ -10,25 +10,22 @@
     "noEmit": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    
+
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    
+
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    
+
     "baseUrl": ".",
     "paths": {
       "@imakaraokay/shared": ["./packages/shared/src"],
       "@imakaraokay/shared/*": ["./packages/shared/src/*"]
     }
   },
-  "references": [
-    { "path": "./services/website" },
-    { "path": "./packages/shared" }
-  ]
-} 
+  "references": [{ "path": "./services/website" }, { "path": "./packages/shared" }]
+}

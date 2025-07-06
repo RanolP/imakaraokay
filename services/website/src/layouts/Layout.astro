@@ -1,7 +1,6 @@
 ---
 import 'uno.css';
 import '@unocss/reset/tailwind.css';
-import LanguageSwitcher from '../features/i18n/ui/language-switcher';
 
 export interface Props {
   title?: string;
@@ -15,7 +14,7 @@ const {
   lang = 'ko',
 } = Astro.props;
 
-const siteUrl = Astro.site || 'https://your-domain.com';
+const _siteUrl = Astro.site || 'https://your-domain.com';
 ---
 
 <!doctype html>

@@ -1,4 +1,4 @@
-import ky from "ky";
+import ky from 'ky';
 
 export interface YouTubeCompletionOptions {
   query: string;

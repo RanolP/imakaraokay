@@ -10,4 +10,4 @@ export class Logger {
   error(message: string) {
     console.error(message);
   }
-} 
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { completeYouTube, type YouTubeCompletionOptions } from '../../src/completion/youtube.js';
+import { completeYouTube } from '../../src/completion/youtube.js';
 
 describe('completeYouTube', () => {
   it('should return suggestions for a popular English query', async () => {
@@ -10,14 +10,14 @@ describe('completeYouTube', () => {
     expect(result.length).toBeLessThanOrEqual(10); // YouTube typically returns up to 10 suggestions
 
     // All suggestions should be strings
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
 
     // Should contain relevant suggestions
-    const hasRelevantSuggestion = result.some(suggestion =>
-      suggestion.toLowerCase().includes('hello')
+    const hasRelevantSuggestion = result.some((suggestion) =>
+      suggestion.toLowerCase().includes('hello'),
     );
     expect(hasRelevantSuggestion).toBe(true);
   }, 10000); // 10 second timeout for network request
@@ -29,15 +29,13 @@ describe('completeYouTube', () => {
     expect(result.length).toBeGreaterThan(0);
 
     // All suggestions should be strings
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
 
     // Should contain Korean suggestions
-    const hasKoreanSuggestion = result.some(suggestion =>
-      /[가-힣]/.test(suggestion)
-    );
+    const hasKoreanSuggestion = result.some((suggestion) => /[가-힣]/.test(suggestion));
     expect(hasKoreanSuggestion).toBe(true);
   }, 10000);
 
@@ -48,14 +46,14 @@ describe('completeYouTube', () => {
     expect(result.length).toBeGreaterThan(0);
 
     // All suggestions should be strings
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
 
     // Should contain karaoke-related suggestions
-    const hasKaraokeSuggestion = result.some(suggestion =>
-      suggestion.toLowerCase().includes('karaoke')
+    const hasKaraokeSuggestion = result.some((suggestion) =>
+      suggestion.toLowerCase().includes('karaoke'),
     );
     expect(hasKaraokeSuggestion).toBe(true);
   }, 10000);
@@ -65,7 +63,7 @@ describe('completeYouTube', () => {
 
     expect(Array.isArray(result)).toBe(true);
     // Empty query might return empty array or some default suggestions
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
     });
   }, 10000);
@@ -76,7 +74,7 @@ describe('completeYouTube', () => {
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(0);
 
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
@@ -88,14 +86,14 @@ describe('completeYouTube', () => {
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(0);
 
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
 
     // Should contain relevant suggestions
-    const hasRelevantSuggestion = result.some(suggestion =>
-      suggestion.toLowerCase().includes('rock')
+    const hasRelevantSuggestion = result.some((suggestion) =>
+      suggestion.toLowerCase().includes('rock'),
     );
     expect(hasRelevantSuggestion).toBe(true);
   }, 10000);
@@ -106,14 +104,17 @@ describe('completeYouTube', () => {
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(0);
 
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
 
     // Should contain Japanese suggestions
-    const hasJapaneseSuggestion = result.some(suggestion =>
-      /[ひらがなカタカナ漢字]/.test(suggestion) || /[ぁ-ゔ]/.test(suggestion) || /[ァ-ヴー]/.test(suggestion)
+    const hasJapaneseSuggestion = result.some(
+      (suggestion) =>
+        /[ひらがなカタカナ漢字]/.test(suggestion) ||
+        /[ぁ-ゔ]/.test(suggestion) ||
+        /[ァ-ヴー]/.test(suggestion),
     );
     expect(hasJapaneseSuggestion).toBe(true);
   }, 10000);
@@ -124,7 +125,7 @@ describe('completeYouTube', () => {
 
     expect(Array.isArray(result)).toBe(true);
     // Long queries might return fewer suggestions or none
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
@@ -136,7 +137,7 @@ describe('completeYouTube', () => {
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(0);
 
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
@@ -148,15 +149,13 @@ describe('completeYouTube', () => {
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(0);
 
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
       expect(suggestion.length).toBeGreaterThan(0);
     });
 
     // Should contain BTS-related suggestions
-    const hasBTSSuggestion = result.some(suggestion =>
-      suggestion.toLowerCase().includes('bts')
-    );
+    const hasBTSSuggestion = result.some((suggestion) => suggestion.toLowerCase().includes('bts'));
     expect(hasBTSSuggestion).toBe(true);
   }, 10000);
 
@@ -176,7 +175,7 @@ describe('completeYouTube', () => {
 
     expect(Array.isArray(result)).toBe(true);
     // Obscure queries might return empty array
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
     });
   }, 10000);
@@ -186,8 +185,8 @@ describe('completeYouTube', () => {
 
     expect(Array.isArray(result)).toBe(true);
     // Emoji queries might work or not, but should not crash
-    result.forEach(suggestion => {
+    result.forEach((suggestion) => {
       expect(typeof suggestion).toBe('string');
     });
   }, 10000);
-}); 
+});

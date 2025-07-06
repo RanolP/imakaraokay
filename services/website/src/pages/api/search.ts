@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ url, request }) => {
           usage:
             'GET /api/search?query=<search_term>&providers=<tj,ky,vocaro,musixmatch>&limit=<number>',
         }),
-        { status: 400, headers }
+        { status: 400, headers },
       );
     }
 
@@ -98,7 +98,7 @@ export const GET: APIRoute = async ({ url, request }) => {
     };
 
     logger.log(
-      `API: Found ${searchResults.karaoke.length} karaoke results and ${searchResults.lyrics.length} lyrics results`
+      `API: Found ${searchResults.karaoke.length} karaoke results and ${searchResults.lyrics.length} lyrics results`,
     );
 
     return new Response(JSON.stringify(response, null, 2), { status: 200, headers });
@@ -111,7 +111,7 @@ export const GET: APIRoute = async ({ url, request }) => {
         message: error instanceof Error ? error.message : 'Unknown error',
         timestamp: new Date().toISOString(),
       }),
-      { status: 500, headers }
+      { status: 500, headers },
     );
   }
 };

@@ -6,7 +6,7 @@ import type { Logger } from '../utils/logger.js';
 export class TJKaraokeProvider implements KaraokeProvider {
   name = 'TJ Karaoke';
 
-  constructor(private logger: Logger) { }
+  constructor(private logger: Logger) {}
 
   async search(query: string): Promise<KaraokeResult[]> {
     this.logger.log(`Searching TJ Karaoke for: ${query}`);

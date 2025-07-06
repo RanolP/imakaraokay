@@ -144,7 +144,7 @@ describe('searchTJ', () => {
     expect(targetSong!.singer).toContain('てにをは');
 
     // Check that title contains ザムザ
-    const titleText = targetSong!.title.map(t => t.content).join('');
+    const titleText = targetSong!.title.map((t) => t.content).join('');
     expect(titleText).toContain('ザムザ');
 
     // Validate structure
@@ -185,7 +185,7 @@ describe('searchTJ', () => {
     expect(targetSong.composer).toContain('じん');
 
     // Check that title contains アヤノの幸福理論
-    const titleText = targetSong.title.map(t => t.content).join('');
+    const titleText = targetSong.title.map((t) => t.content).join('');
     expect(titleText).toContain('アヤノの幸福理論');
 
     // Check for the specific tag

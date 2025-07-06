@@ -95,7 +95,7 @@ export class SearchService {
               ? {
                   main: normalizeForSearch(artist.name.japanese.main),
                   aliases: normalizeArrayForSearch(
-                    artist.name.japanese.aliases?.map((alias) => alias.text) || []
+                    artist.name.japanese.aliases?.map((alias) => alias.text) || [],
                   ),
                 }
               : undefined,
@@ -103,7 +103,7 @@ export class SearchService {
               ? {
                   main: normalizeForSearch(artist.name.english.main),
                   aliases: normalizeArrayForSearch(
-                    artist.name.english.aliases?.map((alias) => alias.text) || []
+                    artist.name.english.aliases?.map((alias) => alias.text) || [],
                   ),
                 }
               : undefined,
@@ -111,7 +111,7 @@ export class SearchService {
               ? {
                   main: normalizeForSearch(artist.name.korean.main),
                   aliases: normalizeArrayForSearch(
-                    artist.name.korean.aliases?.map((alias) => alias.text) || []
+                    artist.name.korean.aliases?.map((alias) => alias.text) || [],
                   ),
                 }
               : undefined,
@@ -146,7 +146,7 @@ export class SearchService {
             artistNames.japanese.push(artist.name.japanese.main);
             if (artist.name.japanese.aliases) {
               artistNames.aliases.push(
-                ...artist.name.japanese.aliases.map((alias: any) => alias.text)
+                ...artist.name.japanese.aliases.map((alias: any) => alias.text),
               );
             }
           }
@@ -156,7 +156,7 @@ export class SearchService {
             artistNames.english.push(artist.name.english.main);
             if (artist.name.english.aliases) {
               artistNames.aliases.push(
-                ...artist.name.english.aliases.map((alias: any) => alias.text)
+                ...artist.name.english.aliases.map((alias: any) => alias.text),
               );
             }
           }
@@ -166,7 +166,7 @@ export class SearchService {
             artistNames.korean.push(artist.name.korean.main);
             if (artist.name.korean.aliases) {
               artistNames.aliases.push(
-                ...artist.name.korean.aliases.map((alias: any) => alias.text)
+                ...artist.name.korean.aliases.map((alias: any) => alias.text),
               );
             }
           }
@@ -182,7 +182,7 @@ export class SearchService {
               ? {
                   main: normalizeForSearch(song.title.japanese.main),
                   aliases: normalizeArrayForSearch(
-                    song.title.japanese.aliases?.map((alias) => alias.text) || []
+                    song.title.japanese.aliases?.map((alias) => alias.text) || [],
                   ),
                 }
               : undefined,
@@ -190,7 +190,7 @@ export class SearchService {
               ? {
                   main: normalizeForSearch(song.title.english.main),
                   aliases: normalizeArrayForSearch(
-                    song.title.english.aliases?.map((alias) => alias.text) || []
+                    song.title.english.aliases?.map((alias) => alias.text) || [],
                   ),
                 }
               : undefined,
@@ -198,7 +198,7 @@ export class SearchService {
               ? {
                   main: normalizeForSearch(song.title.korean.main),
                   aliases: normalizeArrayForSearch(
-                    song.title.korean.aliases?.map((alias) => alias.text) || []
+                    song.title.korean.aliases?.map((alias) => alias.text) || [],
                   ),
                 }
               : undefined,
@@ -332,8 +332,8 @@ export class SearchService {
       const normalizedFilterArtist = normalizeForSearch(filters.artist);
       filtered = filtered.filter((song) =>
         song.artists.some((artistId) =>
-          normalizeForSearch(artistId).includes(normalizedFilterArtist)
-        )
+          normalizeForSearch(artistId).includes(normalizedFilterArtist),
+        ),
       );
     }
 

@@ -4,16 +4,11 @@
     "original": "紅蓮華",
     "japanese": {
       "main": "紅蓮華",
-      "aliases": [
-        { "text": "ぐれんげ" }
-      ]
+      "aliases": [{ "text": "ぐれんげ" }]
     },
     "english": {
       "main": "Gurenge",
-      "aliases": [
-        { "text": "Red Lotus" },
-        { "text": "Internal Dev Name", "hidden": true }
-      ]
+      "aliases": [{ "text": "Red Lotus" }, { "text": "Internal Dev Name", "hidden": true }]
     }
   },
   "artists": ["lisa"],
@@ -25,4 +20,4 @@
   },
   "releaseDate": "2019-07-03",
   "lyrics": "強くなれる理由を知った\n僕を連れて進め"
-} 
+}

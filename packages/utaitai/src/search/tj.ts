@@ -23,7 +23,7 @@ export interface TjSearchOptions {
 }
 export async function* searchTJ({ query }: TjSearchOptions): AsyncGenerator<TjResponse> {
   const url = new URL(
-    'https://www.tjmedia.com/song/accompaniment_search?pageNo=1&pageRowCnt=15&nationType=&strType=0&searchTxt=%EC%83%A4%EB%A5%BC'
+    'https://www.tjmedia.com/song/accompaniment_search?pageNo=1&pageRowCnt=15&nationType=&strType=0&searchTxt=%EC%83%A4%EB%A5%BC',
   );
   url.searchParams.set('strType', Internal.SearchType.TITLE.toString());
 

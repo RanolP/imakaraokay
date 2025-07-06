@@ -1,4 +1,4 @@
-import { Component, createSignal, onMount, onCleanup, Show, createMemo } from 'solid-js';
+import { type Component, createSignal, onMount, onCleanup, Show, createMemo } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 import type { Artist } from '../types/song';
@@ -38,7 +38,7 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
   };
 
   const [selectedLanguage, setSelectedLanguage] = createSignal<ArtistLanguage>(
-    getInitialLanguage()
+    getInitialLanguage(),
   );
   const [isOpen, setIsOpen] = createSignal(false);
   let buttonRef: HTMLButtonElement | undefined;
@@ -77,7 +77,7 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
       name = props.artist.name.original;
     }
     // Truncate if too long to keep dropdown manageable
-    return name.length > 40 ? name.substring(0, 37) + '...' : name;
+    return name.length > 40 ? `${name.substring(0, 37)}...` : name;
   };
 
   // Get aliases for the currently selected language

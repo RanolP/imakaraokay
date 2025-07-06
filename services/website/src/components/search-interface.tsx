@@ -1,4 +1,4 @@
-import { Component, createSignal, onMount, For, Show } from 'solid-js';
+import { type Component, createSignal, onMount, For, Show } from 'solid-js';
 import { songService } from '../services/song-service';
 import { searchService } from '../features/search/model/search-service';
 import type { Song } from '../types/song';

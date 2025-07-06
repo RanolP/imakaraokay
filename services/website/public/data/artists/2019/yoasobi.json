@@ -4,13 +4,11 @@
     "original": "YOASOBI",
     "japanese": {
       "main": "ヨアソビ",
-      "aliases": [
-        { "text": "よあそび" }
-      ]
+      "aliases": [{ "text": "よあそび" }]
     },
     "english": {
       "main": "YOASOBI"
     }
   },
   "debutDate": "2019-11-16"
-} 
+}

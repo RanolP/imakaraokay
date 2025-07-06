@@ -1,4 +1,4 @@
-import { Component, createMemo } from 'solid-js';
+import { type Component, createMemo } from 'solid-js';
 import type { Song } from '../types/song';
 import KaraokeBadges from './karaoke-badges';
 import { useTranslation } from '../features/i18n';
@@ -39,7 +39,7 @@ const SongListItem: Component<SongListItemProps> = (props) => {
       en: 'english' as const,
     };
 
-    return props.song.artists.map((artistId, idx) => {
+    return props.song.artists.map((artistId, _idx) => {
       const displayName = songService.getDisplayArtist(artistId, artistLangPreference[language()]);
       // Link to artist page (assuming /artists/[id])
       return (

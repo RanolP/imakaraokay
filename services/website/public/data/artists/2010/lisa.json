@@ -4,13 +4,11 @@
     "original": "LiSA",
     "japanese": {
       "main": "リサ",
-      "aliases": [
-        { "text": "りさ" }
-      ]
+      "aliases": [{ "text": "りさ" }]
     },
     "english": {
       "main": "LiSA"
     }
   },
   "debutDate": "2010-04-21"
-} 
+}

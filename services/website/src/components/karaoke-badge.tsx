@@ -1,4 +1,4 @@
-import { Component, createSignal, Show } from 'solid-js';
+import { type Component, createSignal } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
 export type KaraokeMachine = 'tj' | 'ky' | 'ebo' | 'joysound';

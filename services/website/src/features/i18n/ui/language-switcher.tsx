@@ -1,4 +1,4 @@
-import { Component, createSignal, onMount, onCleanup, Show } from 'solid-js';
+import { type Component, createSignal, onMount, onCleanup, Show } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 import { i18nStore } from '../model/i18n-store';

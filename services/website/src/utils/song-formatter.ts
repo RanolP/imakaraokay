@@ -14,7 +14,7 @@ export interface FormattedSongItem {
  */
 export function formatSongListItem(
   song: Song,
-  currentLanguage: Language = 'ko'
+  currentLanguage: Language = 'ko',
 ): FormattedSongItem {
   // Map i18n language to song title language
   const langMapping: Record<Language, keyof Song['title']> = {

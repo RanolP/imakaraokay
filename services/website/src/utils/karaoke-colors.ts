@@ -40,7 +40,7 @@ export const getKaraokeChipTextColor = (machine: KaraokeMachine): string => {
  * Get the button/action color classes for a karaoke machine
  */
 export const getKaraokeButtonColors = (
-  machine: KaraokeMachine
+  machine: KaraokeMachine,
 ): { bg: string; hover: string; text: string } => {
   switch (machine) {
     case 'tj':

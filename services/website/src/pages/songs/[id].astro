@@ -1,10 +1,7 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import ClickableTitleVariant from '../../components/clickable-title-variant';
-import KaraokeBadges from '../../components/karaoke-badges';
 import type { Song, Artist } from '../../types/song';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 export async function getStaticPaths() {
   // Load songs data from individual files organized by release year
@@ -12,7 +9,7 @@ export async function getStaticPaths() {
 
   try {
     const songsBasePath = resolve('./public/data/songs');
-    const { readdirSync } = await import('fs');
+    const { readdirSync } = await import('node:fs');
     const yearDirectories = readdirSync(songsBasePath, { withFileTypes: true })
       .filter((dirent) => dirent.isDirectory())
       .map((dirent) => dirent.name);
@@ -47,7 +44,7 @@ export async function getStaticPaths() {
 
   try {
     const artistsBasePath = resolve('./public/data/artists');
-    const { readdirSync } = await import('fs');
+    const { readdirSync } = await import('node:fs');
     const yearDirectories = readdirSync(artistsBasePath, {
       withFileTypes: true,
     })
@@ -93,9 +90,9 @@ interface Props {
 const { song, artists } = Astro.props;
 
 // Helper function to get localized artist name
-const getArtistDisplayName = (
+const _getArtistDisplayName = (
   artistId: string,
-  preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original'
+  preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original',
 ): string => {
   const artist = artists.find((a) => a.id === artistId);
   if (!artist) return artistId;
@@ -111,11 +108,11 @@ const getArtistDisplayName = (
 
 // Generate title and description for SEO
 const songTitle = typeof song.title === 'string' ? song.title : song.title.original;
-const pageTitle = `${songTitle} - Karaoke Song Details`;
-const description = `Find karaoke machine IDs for "${songTitle}". View lyrics and karaoke information for TJ, KY, and Joysound systems.`;
+const _pageTitle = `${songTitle} - Karaoke Song Details`;
+const _description = `Find karaoke machine IDs for "${songTitle}". View lyrics and karaoke information for TJ, KY, and Joysound systems.`;
 
 // Generate structured data for SEO
-const structuredData = {
+const _structuredData = {
   '@context': 'https://schema.org',
   '@type': 'MusicComposition',
   name: songTitle,

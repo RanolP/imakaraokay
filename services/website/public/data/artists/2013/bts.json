@@ -4,9 +4,7 @@
     "original": "BTS",
     "japanese": {
       "main": "ビーティーエス",
-      "aliases": [
-        { "text": "びーてぃーえす" }
-      ]
+      "aliases": [{ "text": "びーてぃーえす" }]
     },
     "english": {
       "main": "BTS"
@@ -21,4 +19,4 @@
     }
   },
   "debutDate": "2013-06-13"
-} 
+}

@@ -1,4 +1,12 @@
-import { defineConfig, presetAttributify, presetIcons, presetTypography, presetWebFonts, presetWind3, presetWind4, transformerDirectives, transformerVariantGroup } from 'unocss'
+import {
+  defineConfig,
+  presetAttributify,
+  presetIcons,
+  presetTypography,
+  presetWind3,
+  transformerDirectives,
+  transformerVariantGroup,
+} from 'unocss';
 
 export default defineConfig({
   theme: {
@@ -54,8 +62,24 @@ export default defineConfig({
       },
     },
     fontFamily: {
-      sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', '"Helvetica Neue"', '"Segoe UI"', '"Apple SD Gothic Neo"', '"Noto Sans KR"', '"Malgun Gothic"', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', 'sans-serif'],
-    }
+      sans: [
+        '"Pretendard Variable"',
+        'Pretendard',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        'system-ui',
+        'Roboto',
+        '"Helvetica Neue"',
+        '"Segoe UI"',
+        '"Apple SD Gothic Neo"',
+        '"Noto Sans KR"',
+        '"Malgun Gothic"',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+        'sans-serif',
+      ],
+    },
   },
   presets: [
     presetWind3({
@@ -65,8 +89,5 @@ export default defineConfig({
     presetIcons(),
     presetTypography(),
   ],
-  transformers: [
-    transformerDirectives(),
-    transformerVariantGroup(),
-  ],
-}) 
+  transformers: [transformerDirectives(), transformerVariantGroup()],
+});

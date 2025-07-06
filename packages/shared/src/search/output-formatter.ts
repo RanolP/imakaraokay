@@ -1,6 +1,6 @@
 import chalk from 'chalk';
-import { SearchResults } from './search-engine.js';
-import { EnhancedLyricsResult } from '../providers/vocaro-provider.js';
+import type { SearchResults } from './search-engine.js';
+import type { EnhancedLyricsResult } from '../providers/vocaro-provider.js';
 
 export class OutputFormatter {
   formatResults(query: string, results: SearchResults) {
@@ -13,13 +13,13 @@ export class OutputFormatter {
     if (results.karaoke.length === 0 && results.lyrics.length === 0) {
       console.log(
         chalk.yellow(
-          '💡 Tip: Try different search terms or use English/Korean/Japanese variations of the song title.'
-        )
+          '💡 Tip: Try different search terms or use English/Korean/Japanese variations of the song title.',
+        ),
       );
       console.log(
         chalk.yellow(
-          '   Some services may have regional restrictions or require specific formatting.\n'
-        )
+          '   Some services may have regional restrictions or require specific formatting.\n',
+        ),
       );
     }
   }
@@ -34,7 +34,7 @@ export class OutputFormatter {
         acc[result.source].push(result);
         return acc;
       },
-      {} as Record<string, any[]>
+      {} as Record<string, any[]>,
     );
 
     // Display TJ results
@@ -43,7 +43,7 @@ export class OutputFormatter {
       resultsBySource.TJ.slice(0, 5).forEach((result: any) => {
         console.log(
           `  ${chalk.cyan(result.id)} - ${result.title}` +
-            (result.artist ? ` ${chalk.gray(`by ${result.artist}`)}` : '')
+            (result.artist ? ` ${chalk.gray(`by ${result.artist}`)}` : ''),
         );
       });
     } else {
@@ -58,7 +58,7 @@ export class OutputFormatter {
       resultsBySource.KY.slice(0, 5).forEach((result: any) => {
         console.log(
           `  ${chalk.magenta(result.id)} - ${result.title}` +
-            (result.artist ? ` ${chalk.gray(`by ${result.artist}`)}` : '')
+            (result.artist ? ` ${chalk.gray(`by ${result.artist}`)}` : ''),
         );
       });
     } else {
@@ -76,7 +76,7 @@ export class OutputFormatter {
         acc[result.source].push(result);
         return acc;
       },
-      {} as Record<string, any[]>
+      {} as Record<string, any[]>,
     );
 
     // Display MusixMatch results
@@ -86,7 +86,7 @@ export class OutputFormatter {
         console.log(
           `  ${result.title}` +
             (result.artist ? ` ${chalk.gray(`by ${result.artist}`)}` : '') +
-            `\n  ${chalk.blue.underline(result.url)}`
+            `\n  ${chalk.blue.underline(result.url)}`,
         );
       });
     } else {
@@ -137,7 +137,7 @@ export class OutputFormatter {
           acc[kr.source].push(kr);
           return acc;
         },
-        {} as Record<string, any[]>
+        {} as Record<string, any[]>,
       );
 
       // Display TJ karaoke results

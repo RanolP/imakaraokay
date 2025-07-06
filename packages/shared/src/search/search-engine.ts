@@ -1,4 +1,4 @@
-import {
+import type {
   KaraokeProvider,
   LyricsProvider,
   AutocompleteProvider,
@@ -6,7 +6,7 @@ import {
   LyricsResult,
   AutocompleteResult,
 } from '../types/search-types.js';
-import { Logger } from '../utils/logger.js';
+import type { Logger } from '../utils/logger.js';
 
 export interface SearchResults {
   karaoke: KaraokeResult[];
@@ -42,14 +42,14 @@ export class SearchEngine {
       provider.search(query).catch((error) => {
         this.logger.log(`Error in ${provider.name}: ${error}`);
         return [];
-      })
+      }),
     );
 
     const lyricsPromises = this.lyricsProviders.map((provider) =>
       provider.search(query).catch((error) => {
         this.logger.log(`Error in ${provider.name}: ${error}`);
         return [];
-      })
+      }),
     );
 
     const [karaokeResults, lyricsResults] = await Promise.all([
@@ -69,7 +69,7 @@ export class SearchEngine {
       provider.getSuggestions(query).catch((error) => {
         this.logger.log(`Error in ${provider.name}: ${error}`);
         return [];
-      })
+      }),
     );
 
     const autocompleteResults = await Promise.all(autocompletePromises);
