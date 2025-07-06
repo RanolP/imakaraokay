@@ -28,8 +28,8 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
   },

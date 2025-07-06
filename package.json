@@ -6,7 +6,9 @@
     "dev": "pnpm -F website dev",
     "build": "pnpm -F website build",
     "preview": "pnpm -F website preview",
-    "build:all": "pnpm -r build",
+    "build:all": "tsdown && pnpm -F website build",
+    "build:libs": "tsdown",
+    "dev:libs": "tsdown --watch",
     "dev:all": "pnpm -r dev",
     "clean": "pnpm -r clean && rm -rf node_modules",
     "install:all": "pnpm install",
@@ -14,6 +16,7 @@
     "type-check": "pnpm -r type-check"
   },
   "devDependencies": {
+    "tsdown": "^0.12.9"
   },
   "packageManager": "pnpm@9.0.0"
-} 
+}

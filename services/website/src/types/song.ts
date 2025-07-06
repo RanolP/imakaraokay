@@ -84,14 +84,14 @@ export interface Artist {
   name: MultilingualSearchableString;
 
   /**
-   * The set of song ID
+   * The set of song ID (computed dynamically, not stored in raw data)
    */
-  songs: string[];
+  songs?: string[];
 
   /**
-   * The number of songs
+   * The number of songs (computed dynamically, not stored in raw data)
    */
-  songCount: number;
+  songCount?: number;
 
   /**
    * The debut date in ISO format

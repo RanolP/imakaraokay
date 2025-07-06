@@ -1,6 +1,6 @@
 /// <reference types="astro/client" />
 import type { APIRoute } from 'astro';
-import type { Artist } from '../../types/song';
+import type { Artist, Song } from '../../types/song';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { resolve, dirname } from 'path';
 
@@ -94,6 +94,56 @@ function deleteArtist(artistId: string): boolean {
   }
 }
 
+function loadAllSongs(): Song[] {
+  const songs: Song[] = [];
+  const songsBasePath = resolve('./public/data/songs');
+  
+  try {
+    const yearDirectories = readdirSync(songsBasePath, { withFileTypes: true })
+      .filter((dirent: any) => dirent.isDirectory())
+      .map((dirent: any) => dirent.name);
+
+    for (const year of yearDirectories) {
+      const yearPath = resolve(songsBasePath, year);
+      const songFiles = readdirSync(yearPath, { withFileTypes: true })
+        .filter((dirent: any) => dirent.isFile() && dirent.name.endsWith('.json'))
+        .map((dirent: any) => dirent.name.replace('.json', ''));
+
+      for (const songId of songFiles) {
+        try {
+          const songPath = resolve(yearPath, `${songId}.json`);
+          const songData = readFileSync(songPath, 'utf-8');
+          const song: Song = JSON.parse(songData);
+          songs.push(song);
+        } catch (error) {
+          console.warn(`Failed to load song ${songId}:`, error);
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load songs:', error);
+  }
+  
+  return songs;
+}
+
+function computeArtistSongs(artistId: string, allSongs: Song[]): { songs: string[], songCount: number } {
+  const artistSongs = allSongs.filter(song => song.artists.includes(artistId));
+  return {
+    songs: artistSongs.map(song => song.id),
+    songCount: artistSongs.length
+  };
+}
+
+function enrichArtistWithSongs(artist: Artist, allSongs: Song[]): Artist {
+  const { songs, songCount } = computeArtistSongs(artist.id, allSongs);
+  return {
+    ...artist,
+    songs,
+    songCount
+  };
+}
+
 function validateArtist(artist: any): string[] {
   const errors: string[] = [];
   
@@ -107,12 +157,13 @@ function validateArtist(artist: any): string[] {
     errors.push('Artist name.original is required and must be a string');
   }
   
-  if (!artist.songs || !Array.isArray(artist.songs)) {
-    errors.push('Artist songs is required and must be an array');
+  // songs and songCount are optional and computed dynamically
+  if (artist.songs !== undefined && !Array.isArray(artist.songs)) {
+    errors.push('Artist songs must be an array if provided');
   }
   
   if (artist.songCount !== undefined && typeof artist.songCount !== 'number') {
-    errors.push('Artist songCount must be a number');
+    errors.push('Artist songCount must be a number if provided');
   }
   
   return errors;
@@ -125,6 +176,9 @@ export const GET: APIRoute = async ({ url }) => {
     const searchParams = new URL(url).searchParams;
     const artistId = searchParams.get('id');
     
+    // Load all songs once for computing derived data
+    const allSongs = loadAllSongs();
+    
     if (artistId) {
       // Get specific artist
       const artist = loadArtist(artistId);
@@ -135,8 +189,11 @@ export const GET: APIRoute = async ({ url }) => {
         );
       }
       
+      // Enrich artist with computed songs and songCount
+      const enrichedArtist = enrichArtistWithSongs(artist, allSongs);
+      
       return new Response(
-        JSON.stringify({ artist }),
+        JSON.stringify({ artist: enrichedArtist }),
         { status: 200, headers: CORS_HEADERS }
       );
     } else {
@@ -158,7 +215,9 @@ export const GET: APIRoute = async ({ url }) => {
           for (const artistId of artistFiles) {
             const artist = loadArtist(artistId);
             if (artist) {
-              artists.push(artist);
+              // Enrich each artist with computed songs and songCount
+              const enrichedArtist = enrichArtistWithSongs(artist, allSongs);
+              artists.push(enrichedArtist);
             }
           }
         }

@@ -52,8 +52,6 @@ interface ArtistFormData {
       aliases?: Array<{ text: string; hidden?: boolean }>;
     };
   };
-  songs: string[];
-  songCount: number;
   debutDate?: string;
 }
 
@@ -86,8 +84,6 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
   const [artistFormData, setArtistFormData] = createSignal<ArtistFormData>({
     id: '',
     name: { original: '' },
-    songs: [],
-    songCount: 0,
   });
 
   // Load data on mount
@@ -177,8 +173,6 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
     setArtistFormData({
       id: '',
       name: { original: '' },
-      songs: [],
-      songCount: 0,
     });
     setEditingArtist(null);
     setShowArtistForm(false);
@@ -213,8 +207,6 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
     setArtistFormData({
       id: artist.id,
       name: artist.name,
-      songs: artist.songs || [],
-      songCount: artist.songCount || 0,
       debutDate: artist.debutDate || '',
     });
     setEditingArtist(artist);
@@ -248,8 +240,6 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
     setArtistFormData({
       id: '',
       name: { original: '' },
-      songs: [],
-      songCount: 0,
     });
     setEditingArtist(null);
     setShowArtistForm(true);
@@ -384,24 +374,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
     }));
   };
 
-  const addSongToArtist = () => {
-    const newSong = prompt('Enter song ID:');
-    if (newSong && newSong.trim()) {
-      setArtistFormData(prev => ({
-        ...prev,
-        songs: [...prev.songs, newSong.trim()],
-        songCount: prev.songs.length + 1,
-      }));
-    }
-  };
 
-  const removeSongFromArtist = (index: number) => {
-    setArtistFormData(prev => ({
-      ...prev,
-      songs: prev.songs.filter((_, i) => i !== index),
-      songCount: prev.songs.length - 1,
-    }));
-  };
 
   const SongForm = () => (
     <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
@@ -611,42 +584,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
           />
         </div>
         
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Songs
-          </label>
-          <div class="space-y-2">
-            <For each={artistFormData().songs}>
-              {(song, index) => (
-                <div class="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={song}
-                    onInput={(e) => {
-                      const newSongs = [...artistFormData().songs];
-                      newSongs[index()] = e.currentTarget.value;
-                      updateArtistFormField('songs', newSongs);
-                      updateArtistFormField('songCount', newSongs.length);
-                    }}
-                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                  <button
-                    onClick={() => removeSongFromArtist(index())}
-                    class="text-red-600 hover:text-red-800"
-                  >
-                    Remove
-                  </button>
-                </div>
-              )}
-            </For>
-            <button
-              onClick={addSongToArtist}
-              class="text-blue-600 hover:text-blue-800 text-sm"
-            >
-              + Add Song
-            </button>
-          </div>
-        </div>
+
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">
