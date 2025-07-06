@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { searchTJ, type TjResponse } from './tj.js';
+import { searchTJ, type TjResponse } from '../../src/search/tj.js';
 
 describe('searchTJ', () => {
   it('should search for Korean songs and return results', async () => {

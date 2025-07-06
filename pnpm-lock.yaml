@@ -20,6 +20,9 @@ importers:
 
   packages/shared:
     dependencies:
+      '@imakaraokay/utaitai':
+        specifier: workspace:*
+        version: link:../utaitai
       chalk:
         specifier: ^5.4.1
         version: 5.4.1

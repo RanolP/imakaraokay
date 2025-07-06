@@ -39,7 +39,7 @@ export async function* searchTJ({ query }: Options): AsyncGenerator<TjResponse> 
 
   do {
     url.searchParams.set('pageNo', pageNo.toString());
-    const response = await ky.get(url.toString()).text();
+    const response = await ky.get(url).text();
     const $ = cheerio.load(response);
 
     const rows = $('.chart-list-area > li > ul:not(.top)');
