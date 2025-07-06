@@ -503,6 +503,28 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              EBO Karaoke ID
+            </label>
+            <input
+              type="text"
+              value={songFormData().karaoke.ebo || ''}
+              onInput={(e) => updateSongFormField('karaoke', { ...songFormData().karaoke, ebo: e.currentTarget.value })}
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Joysound Karaoke ID
+            </label>
+            <input
+              type="text"
+              value={songFormData().karaoke.joysound || ''}
+              onInput={(e) => updateSongFormField('karaoke', { ...songFormData().karaoke, joysound: e.currentTarget.value })}
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          </div>
         </div>
         
         <div>
