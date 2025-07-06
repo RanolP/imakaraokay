@@ -34,7 +34,7 @@ export async function* searchKY({ query }: KySearchOptions): AsyncGenerator<KyRe
       }
 
       const title = $(row).find('li.search_chart_tit span.tit:not(.mo-art)').text().trim();
-      const lyricCont = $(row).find('li.search_chart_tit .LyricsCont').text().trim();
+      const lyricCont = $(row).find('li.search_chart_tit .LyricsCont').children().toArray().map((child) => $(child).hasClass('LyricsTit') ? '' : $(child).text()).join('');
       const singer = $(row).find('li.search_chart_sng').text().trim();
       const composer = $(row).find('li.search_chart_cmp').text().trim();
       const lyricist = $(row).find('li.search_chart_wrt').text().trim();
