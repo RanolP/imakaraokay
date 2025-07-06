@@ -38,4 +38,4 @@ export interface LyricsProvider extends SearchProvider {
 export interface AutocompleteProvider {
   name: string;
   getSuggestions(query: string): Promise<AutocompleteResult[]>;
-} 
+}

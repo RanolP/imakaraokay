@@ -16,19 +16,19 @@ const SongListItem: Component<SongListItemProps> = (props) => {
   const getCurrentTitle = () => {
     const langMapping = {
       ko: 'korean' as const,
-      en: 'english' as const
+      en: 'english' as const,
     };
-    
+
     const songLang = langMapping[language()];
     let currentTitle = props.song.title.original;
-    
+
     if (songLang && props.song.title[songLang]) {
       const langTitle = props.song.title[songLang];
       if (langTitle && typeof langTitle === 'object' && 'main' in langTitle) {
         currentTitle = langTitle.main;
       }
     }
-    
+
     return currentTitle;
   };
 
@@ -36,24 +36,23 @@ const SongListItem: Component<SongListItemProps> = (props) => {
   const getArtistNames = () => {
     const artistLangPreference = {
       ko: 'korean' as const,
-      en: 'english' as const
+      en: 'english' as const,
     };
 
-    return props.song.artists
-      .map((artistId, idx) => {
-        const displayName = songService.getDisplayArtist(artistId, artistLangPreference[language()]);
-        // Link to artist page (assuming /artists/[id])
-        return (
-          <a
-            href={`/artists/${artistId}`}
-            class="text-gray-700 hover:text-gray-900 hover:underline"
-            rel="noopener"
-            tabIndex={0}
-          >
-            {displayName}
-          </a>
-        );
-      })
+    return props.song.artists.map((artistId, idx) => {
+      const displayName = songService.getDisplayArtist(artistId, artistLangPreference[language()]);
+      // Link to artist page (assuming /artists/[id])
+      return (
+        <a
+          href={`/artists/${artistId}`}
+          class="text-gray-700 hover:text-gray-900 hover:underline"
+          rel="noopener"
+          tabIndex={0}
+        >
+          {displayName}
+        </a>
+      );
+    });
   };
 
   // Make these values reactive so they update when language changes
@@ -67,14 +66,12 @@ const SongListItem: Component<SongListItemProps> = (props) => {
       <div class="text-lg font-semibold text-gray-900 mb-2 leading-tight">
         <span class="text-purple-600">⟨</span>
         {currentTitle()}
-        {showOriginal() && (
-          <span class="text-gray-600"> ({originalTitle})</span>
-        )}
+        {showOriginal() && <span class="text-gray-600"> ({originalTitle})</span>}
         <span class="text-purple-600">⟩</span>
         <span class="text-gray-400 mx-2">—</span>
         <span class="text-gray-700">{getArtistNames()}</span>
       </div>
-      
+
       {/* Karaoke IDs using the great badge system */}
       <div class="mt-3">
         <KaraokeBadges song={props.song} size="sm" />
@@ -83,4 +80,4 @@ const SongListItem: Component<SongListItemProps> = (props) => {
   );
 };
 
-export default SongListItem; 
+export default SongListItem;

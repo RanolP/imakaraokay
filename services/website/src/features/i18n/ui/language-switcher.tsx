@@ -19,18 +19,14 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
   let dropdownRef: HTMLDivElement | undefined;
 
   const currentLang = i18nStore.language;
-  const currentLanguageData = () => languages.find(lang => lang.code === currentLang());
+  const currentLanguageData = () => languages.find((lang) => lang.code === currentLang());
 
   const updatePosition = async () => {
     if (isServer || !buttonRef || !dropdownRef) return;
 
     const { x, y } = await computePosition(buttonRef, dropdownRef, {
       placement: 'bottom-end',
-      middleware: [
-        offset(8),
-        flip(),
-        shift({ padding: 8 }),
-      ],
+      middleware: [offset(8), flip(), shift({ padding: 8 })],
     });
 
     dropdownRef.style.left = `${x}px`;
@@ -51,8 +47,10 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
-      buttonRef && !buttonRef.contains(event.target as Node) &&
-      dropdownRef && !dropdownRef.contains(event.target as Node)
+      buttonRef &&
+      !buttonRef.contains(event.target as Node) &&
+      dropdownRef &&
+      !dropdownRef.contains(event.target as Node)
     ) {
       setIsOpen(false);
     }
@@ -78,19 +76,20 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
         class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200 hover:text-purple-600"
         title={currentLang() === 'ko' ? 'Switch language' : '언어 변경'}
       >
-        <span class="text-base leading-none">
-          {currentLanguageData()?.flag}
-        </span>
-        <span class="hidden sm:inline">
-          {currentLanguageData()?.label}
-        </span>
-        <svg 
+        <span class="text-base leading-none">{currentLanguageData()?.flag}</span>
+        <span class="hidden sm:inline">{currentLanguageData()?.label}</span>
+        <svg
           class={`w-4 h-4 transition-all duration-200 ${isOpen() ? 'rotate-180 text-purple-600' : 'text-gray-400'}`}
-          fill="none" 
-          stroke="currentColor" 
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
 
@@ -104,8 +103,8 @@ const LanguageSwitcher: Component<LanguageSwitcherProps> = (props) => {
             <button
               onClick={() => handleLanguageSelect(language.code)}
               class={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left transition-colors duration-150 ${
-                currentLang() === language.code 
-                  ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' 
+                currentLang() === language.code
+                  ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >

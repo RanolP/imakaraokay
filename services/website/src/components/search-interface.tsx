@@ -27,7 +27,7 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
     try {
       const songs = await songService.loadSongs();
       const artists = songService.getArtists();
-      
+
       // Pass both songs and artists to search service for enhanced artist name search
       searchService.setSongs(songs, artists);
       setPopularSongs(songService.getPopularSongs(10));
@@ -40,7 +40,7 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    
+
     if (!query.trim()) {
       setSearchResults({ songs: [], artists: [], total: 0, query: '' });
       return;
@@ -75,8 +75,18 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
             class="w-full px-6 py-4 text-lg text-gray-800 rounded-full border-0 shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-300"
           />
           <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <svg
+              class="w-6 h-6 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
           </div>
         </div>
@@ -97,7 +107,7 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
               <h2 class="text-2xl font-bold mb-4 text-gray-200">
                 {t('home.searchResults')} ({searchResults().total} found)
               </h2>
-              
+
               {/* Responsive grid layout for side-by-side on wider screens */}
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Song Results - Show first and take more space */}
@@ -160,9 +170,7 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
           {/* Popular Songs (shown when no search query) */}
           <Show when={!isSearchActive() && popularSongs().length > 0}>
             <div>
-              <h2 class="text-2xl font-bold mb-6 text-gray-200">
-                {t('home.popularSongs')}
-              </h2>
+              <h2 class="text-2xl font-bold mb-6 text-gray-200">{t('home.popularSongs')}</h2>
               <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <For each={popularSongs()}>
                   {(song) => (
@@ -183,4 +191,4 @@ const SearchInterface: Component<SearchInterfaceProps> = (props) => {
   );
 };
 
-export default SearchInterface; 
+export default SearchInterface;

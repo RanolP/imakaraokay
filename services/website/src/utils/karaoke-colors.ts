@@ -39,37 +39,39 @@ export const getKaraokeChipTextColor = (machine: KaraokeMachine): string => {
 /**
  * Get the button/action color classes for a karaoke machine
  */
-export const getKaraokeButtonColors = (machine: KaraokeMachine): { bg: string; hover: string; text: string } => {
+export const getKaraokeButtonColors = (
+  machine: KaraokeMachine
+): { bg: string; hover: string; text: string } => {
   switch (machine) {
     case 'tj':
       return {
         bg: 'bg-tj-600',
         hover: 'hover:bg-tj-700',
-        text: 'text-white'
+        text: 'text-white',
       };
     case 'ky':
       return {
         bg: 'bg-ky-600',
         hover: 'hover:bg-ky-700',
-        text: 'text-white'
+        text: 'text-white',
       };
     case 'ebo':
       return {
         bg: 'bg-ebo-600',
         hover: 'hover:bg-ebo-700',
-        text: 'text-white'
+        text: 'text-white',
       };
     case 'joysound':
       return {
         bg: 'bg-joysound-600',
         hover: 'hover:bg-joysound-700',
-        text: 'text-white'
+        text: 'text-white',
       };
     default:
       return {
         bg: 'bg-gray-600',
         hover: 'hover:bg-gray-700',
-        text: 'text-white'
+        text: 'text-white',
       };
   }
 };
@@ -102,4 +104,4 @@ export const getKaraokeColors = (machine: KaraokeMachine) => {
     button: getKaraokeButtonColors(machine),
     machineName: getKaraokeMachineName(machine),
   };
-}; 
+};

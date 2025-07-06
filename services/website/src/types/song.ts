@@ -5,7 +5,7 @@ export interface Alias {
 
 export interface AliasableString {
   /**
-   * The main headword 
+   * The main headword
    */
   main: string;
   /**

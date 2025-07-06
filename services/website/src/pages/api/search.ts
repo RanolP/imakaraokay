@@ -1,6 +1,13 @@
 /// <reference types="astro/client" />
 import type { APIRoute } from 'astro';
-import { TJKaraokeProvider, KYKaraokeProvider, VocaroProvider, MusixMatchProvider, Logger, SearchEngine } from '@imakaraokay/shared';
+import {
+  TJKaraokeProvider,
+  KYKaraokeProvider,
+  VocaroProvider,
+  MusixMatchProvider,
+  Logger,
+  SearchEngine,
+} from '@imakaraokay/shared';
 
 // Only allow this endpoint in development
 const isDev = process.env.NODE_ENV !== 'production';
@@ -32,24 +39,27 @@ export const GET: APIRoute = async ({ url, request }) => {
 
     if (!query) {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: 'Query parameter is required',
-          usage: 'GET /api/search?query=<search_term>&providers=<tj,ky,vocaro,musixmatch>&limit=<number>'
-        }), 
+          usage:
+            'GET /api/search?query=<search_term>&providers=<tj,ky,vocaro,musixmatch>&limit=<number>',
+        }),
         { status: 400, headers }
       );
     }
 
     // Parse parameters
-    const providers = providersParam ? providersParam.split(',') : ['tj', 'ky', 'vocaro', 'musixmatch'];
+    const providers = providersParam
+      ? providersParam.split(',')
+      : ['tj', 'ky', 'vocaro', 'musixmatch'];
     const limit = limitParam ? parseInt(limitParam, 10) : 10;
 
     // Initialize logger
     const logger = new Logger();
-    
+
     // Initialize search engine with selected providers
     const searchEngine = new SearchEngine(logger);
-    
+
     // Add requested karaoke providers
     if (providers.includes('tj')) {
       searchEngine.addKaraokeProvider(new TJKaraokeProvider(logger));
@@ -57,7 +67,7 @@ export const GET: APIRoute = async ({ url, request }) => {
     if (providers.includes('ky')) {
       searchEngine.addKaraokeProvider(new KYKaraokeProvider(logger));
     }
-    
+
     // Add requested lyrics providers
     if (providers.includes('vocaro')) {
       searchEngine.addLyricsProvider(new VocaroProvider(logger));
@@ -73,7 +83,7 @@ export const GET: APIRoute = async ({ url, request }) => {
     // Apply limit to results
     const limitedResults = {
       karaoke: searchResults.karaoke.slice(0, limit),
-      lyrics: searchResults.lyrics.slice(0, limit)
+      lyrics: searchResults.lyrics.slice(0, limit),
     };
 
     // Format response
@@ -84,30 +94,28 @@ export const GET: APIRoute = async ({ url, request }) => {
       results: limitedResults,
       total: {
         karaoke: searchResults.karaoke.length,
-        lyrics: searchResults.lyrics.length
+        lyrics: searchResults.lyrics.length,
       },
       returned: {
         karaoke: limitedResults.karaoke.length,
-        lyrics: limitedResults.lyrics.length
+        lyrics: limitedResults.lyrics.length,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
-    logger.log(`API: Found ${searchResults.karaoke.length} karaoke results and ${searchResults.lyrics.length} lyrics results`);
-
-    return new Response(
-      JSON.stringify(response, null, 2),
-      { status: 200, headers }
+    logger.log(
+      `API: Found ${searchResults.karaoke.length} karaoke results and ${searchResults.lyrics.length} lyrics results`
     );
 
+    return new Response(JSON.stringify(response, null, 2), { status: 200, headers });
   } catch (error) {
     console.error('API Search Error:', error);
-    
+
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
         message: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }),
       { status: 500, headers }
     );
@@ -123,4 +131,4 @@ export const OPTIONS: APIRoute = async () => {
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
-}; 
+};

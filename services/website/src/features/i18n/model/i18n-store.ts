@@ -16,7 +16,7 @@ const translations: Record<Language, TranslationKeys> = {
 // Get initial language from localStorage or default to Korean
 const getInitialLanguage = (): Language => {
   if (isServer) return DEFAULT_LANGUAGE;
-  
+
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && (stored === 'ko' || stored === 'en')) {
@@ -25,7 +25,7 @@ const getInitialLanguage = (): Language => {
   } catch (error) {
     console.warn('Failed to read language from localStorage:', error);
   }
-  
+
   return DEFAULT_LANGUAGE;
 };
 
@@ -50,22 +50,22 @@ export const getCurrentTranslations = () => translations[currentLanguage()];
 export const i18nStore = {
   // Get current language
   language: currentLanguage,
-  
+
   // Set language
   setLanguage: (language: Language) => {
     setCurrentLanguage(language);
   },
-  
+
   // Toggle between Korean and English
   toggleLanguage: () => {
-    setCurrentLanguage(prev => prev === 'ko' ? 'en' : 'ko');
+    setCurrentLanguage((prev) => (prev === 'ko' ? 'en' : 'ko'));
   },
-  
+
   // Get translation for a specific key
   t: (key: string): string => {
     const translations = getCurrentTranslations();
     const keys = key.split('.');
-    
+
     let result: any = translations;
     for (const k of keys) {
       result = result?.[k];
@@ -74,15 +74,15 @@ export const i18nStore = {
         return key; // Return the key itself as fallback
       }
     }
-    
+
     return typeof result === 'string' ? result : key;
   },
-  
+
   // Get available languages
   getAvailableLanguages: () => Object.keys(translations) as Language[],
-  
+
   // Check if a language is available
   isLanguageAvailable: (language: string): language is Language => {
     return language in translations;
   },
-}; 
+};

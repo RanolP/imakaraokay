@@ -31,10 +31,7 @@ export async function getStaticPaths() {
             const song: Song = JSON.parse(songData);
             songs.push(song);
           } catch (error) {
-            console.warn(
-              `Failed to load song ${songId} from year ${year}:`,
-              error,
-            );
+            console.warn(`Failed to load song ${songId} from year ${year}:`, error);
           }
         }
       } catch (error) {
@@ -71,17 +68,11 @@ export async function getStaticPaths() {
             const artist: Artist = JSON.parse(artistData);
             artists.push(artist);
           } catch (error) {
-            console.warn(
-              `Failed to load artist ${artistId} from year ${year}:`,
-              error,
-            );
+            console.warn(`Failed to load artist ${artistId} from year ${year}:`, error);
           }
         }
       } catch (error) {
-        console.warn(
-          `Failed to read artist directory for year ${year}:`,
-          error,
-        );
+        console.warn(`Failed to read artist directory for year ${year}:`, error);
       }
     }
   } catch (error) {
@@ -104,7 +95,7 @@ const { song, artists } = Astro.props;
 // Helper function to get localized artist name
 const getArtistDisplayName = (
   artistId: string,
-  preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original',
+  preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original'
 ): string => {
   const artist = artists.find((a) => a.id === artistId);
   if (!artist) return artistId;
@@ -119,8 +110,7 @@ const getArtistDisplayName = (
 };
 
 // Generate title and description for SEO
-const songTitle =
-  typeof song.title === 'string' ? song.title : song.title.original;
+const songTitle = typeof song.title === 'string' ? song.title : song.title.original;
 const pageTitle = `${songTitle} - Karaoke Song Details`;
 const description = `Find karaoke machine IDs for "${songTitle}". View lyrics and karaoke information for TJ, KY, and Joysound systems.`;
 

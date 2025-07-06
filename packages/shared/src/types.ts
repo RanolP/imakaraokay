@@ -31,4 +31,4 @@ export interface KaraokeMachineInfo {
   name: string;
   color: string;
   website?: string;
-} 
+}

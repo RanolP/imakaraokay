@@ -10,7 +10,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "type-check": "astro check",
-    "lint": "echo 'No linting configured for website'",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "format": "biome format src/",
+    "format:fix": "biome format --write src/",
     "clean": "rm -rf dist .astro"
   },
   "license": "MIT",

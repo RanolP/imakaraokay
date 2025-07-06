@@ -31,10 +31,11 @@ export const GET: APIRoute = async ({ url, request }) => {
 
     if (!query) {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: 'Query parameter is required',
-          usage: 'GET /api/search-simple?query=<search_term>&providers=<tj,ky,vocaro>&limit=<number>'
-        }), 
+          usage:
+            'GET /api/search-simple?query=<search_term>&providers=<tj,ky,vocaro>&limit=<number>',
+        }),
         { status: 400, headers }
       );
     }
@@ -46,18 +47,33 @@ export const GET: APIRoute = async ({ url, request }) => {
     // Mock search results for testing
     const mockResults = {
       karaoke: [
-        { id: '12345', title: `Test Song for ${query}`, artist: 'Test Artist', source: 'TJ' as const },
-        { id: '67890', title: `Another ${query} Song`, artist: 'Another Artist', source: 'KY' as const }
+        {
+          id: '12345',
+          title: `Test Song for ${query}`,
+          artist: 'Test Artist',
+          source: 'TJ' as const,
+        },
+        {
+          id: '67890',
+          title: `Another ${query} Song`,
+          artist: 'Another Artist',
+          source: 'KY' as const,
+        },
       ],
       lyrics: [
-        { title: `${query} Lyrics`, artist: 'Lyrics Artist', url: 'http://example.com', source: 'Vocaro' as const }
-      ]
+        {
+          title: `${query} Lyrics`,
+          artist: 'Lyrics Artist',
+          url: 'http://example.com',
+          source: 'Vocaro' as const,
+        },
+      ],
     };
 
     // Apply limit to results
     const limitedResults = {
       karaoke: mockResults.karaoke.slice(0, limit),
-      lyrics: mockResults.lyrics.slice(0, limit)
+      lyrics: mockResults.lyrics.slice(0, limit),
     };
 
     // Format response
@@ -68,29 +84,25 @@ export const GET: APIRoute = async ({ url, request }) => {
       results: limitedResults,
       total: {
         karaoke: mockResults.karaoke.length,
-        lyrics: mockResults.lyrics.length
+        lyrics: mockResults.lyrics.length,
       },
       returned: {
         karaoke: limitedResults.karaoke.length,
-        lyrics: limitedResults.lyrics.length
+        lyrics: limitedResults.lyrics.length,
       },
-      note: "This is a mock API endpoint for testing. Real search functionality requires CLI integration.",
-      timestamp: new Date().toISOString()
+      note: 'This is a mock API endpoint for testing. Real search functionality requires CLI integration.',
+      timestamp: new Date().toISOString(),
     };
 
-    return new Response(
-      JSON.stringify(response, null, 2),
-      { status: 200, headers }
-    );
-
+    return new Response(JSON.stringify(response, null, 2), { status: 200, headers });
   } catch (error) {
     console.error('API Search Error:', error);
-    
+
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
         message: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }),
       { status: 500, headers }
     );
@@ -106,4 +118,4 @@ export const OPTIONS: APIRoute = async () => {
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
-}; 
+};

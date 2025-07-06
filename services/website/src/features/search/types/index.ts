@@ -23,4 +23,4 @@ export interface SearchFilters {
 
 export type KaraokeMachine = 'tj' | 'ky' | 'ebo' | 'joysound';
 
-export type LanguagePreference = 'original' | 'japanese' | 'english' | 'korean'; 
+export type LanguagePreference = 'original' | 'japanese' | 'english' | 'korean';

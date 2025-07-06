@@ -5,7 +5,7 @@ export interface TranslationKeys {
     about: string;
     error: string;
   };
-  
+
   // Homepage
   home: {
     title: string;
@@ -19,21 +19,21 @@ export interface TranslationKeys {
     popularSongs: string;
     loading: string;
   };
-  
+
   // About page
   about: {
     title: string;
     description: string;
     weLovenpm: string;
   };
-  
+
   // Common
   common: {
     search: string;
     loading: string;
     error: string;
   };
-  
+
   // Song details
   song: {
     artists: string;
@@ -45,4 +45,4 @@ export interface TranslationKeys {
   };
 }
 
-export type Language = 'ko' | 'en'; 
+export type Language = 'ko' | 'en';

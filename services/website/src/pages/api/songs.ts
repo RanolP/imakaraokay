@@ -22,7 +22,7 @@ function getSongPath(songId: string, releaseYear?: string): string {
   if (releaseYear) {
     return resolve(`./public/data/songs/${releaseYear}/${songId}.json`);
   }
-  
+
   // Search for the song in all year directories
   const songsBasePath = resolve('./public/data/songs');
   try {
@@ -39,7 +39,7 @@ function getSongPath(songId: string, releaseYear?: string): string {
   } catch (error) {
     console.warn('Failed to search for song:', error);
   }
-  
+
   // Default to current year if not found
   const currentYear = new Date().getFullYear().toString();
   return resolve(`./public/data/songs/${currentYear}/${songId}.json`);
@@ -64,12 +64,12 @@ function saveSong(song: Song, releaseYear?: string): boolean {
     const year = releaseYear || new Date().getFullYear().toString();
     const songPath = getSongPath(song.id, year);
     const dirPath = dirname(songPath);
-    
+
     // Ensure directory exists
     if (!existsSync(dirPath)) {
       mkdirSync(dirPath, { recursive: true });
     }
-    
+
     // Save the song with proper formatting
     writeFileSync(songPath, JSON.stringify(song, null, 2), 'utf-8');
     return true;
@@ -85,7 +85,7 @@ function deleteSong(songId: string): boolean {
     if (!existsSync(songPath)) {
       return false;
     }
-    
+
     unlinkSync(songPath);
     return true;
   } catch (error) {
@@ -96,27 +96,27 @@ function deleteSong(songId: string): boolean {
 
 function validateSong(song: any): string[] {
   const errors: string[] = [];
-  
+
   if (!song.id || typeof song.id !== 'string') {
     errors.push('Song ID is required and must be a string');
   }
-  
+
   if (!song.title || typeof song.title !== 'object') {
     errors.push('Song title is required and must be an object');
   } else if (!song.title.original || typeof song.title.original !== 'string') {
     errors.push('Song title.original is required and must be a string');
   }
-  
+
   if (!song.artists || !Array.isArray(song.artists)) {
     errors.push('Song artists is required and must be an array');
   } else if (song.artists.length === 0) {
     errors.push('Song must have at least one artist');
   }
-  
+
   if (!song.karaoke || typeof song.karaoke !== 'object') {
     errors.push('Song karaoke is required and must be an object');
   }
-  
+
   return errors;
 }
 
@@ -126,26 +126,23 @@ export const GET: APIRoute = async ({ url }) => {
   try {
     const searchParams = new URL(url).searchParams;
     const songId = searchParams.get('id');
-    
+
     if (songId) {
       // Get specific song
       const song = loadSong(songId);
       if (!song) {
-        return new Response(
-          JSON.stringify({ error: 'Song not found' }),
-          { status: 404, headers: CORS_HEADERS }
-        );
+        return new Response(JSON.stringify({ error: 'Song not found' }), {
+          status: 404,
+          headers: CORS_HEADERS,
+        });
       }
-      
-      return new Response(
-        JSON.stringify({ song }),
-        { status: 200, headers: CORS_HEADERS }
-      );
+
+      return new Response(JSON.stringify({ song }), { status: 200, headers: CORS_HEADERS });
     } else {
       // Get all songs (limited for performance)
       const songs: Song[] = [];
       const songsBasePath = resolve('./public/data/songs');
-      
+
       try {
         const yearDirectories = readdirSync(songsBasePath, { withFileTypes: true })
           .filter((dirent: any) => dirent.isDirectory())
@@ -167,18 +164,18 @@ export const GET: APIRoute = async ({ url }) => {
       } catch (error) {
         console.warn('Failed to load songs:', error);
       }
-      
-      return new Response(
-        JSON.stringify({ songs, count: songs.length }),
-        { status: 200, headers: CORS_HEADERS }
-      );
+
+      return new Response(JSON.stringify({ songs, count: songs.length }), {
+        status: 200,
+        headers: CORS_HEADERS,
+      });
     }
   } catch (error) {
     console.error('GET /api/songs error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: CORS_HEADERS }
-    );
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: CORS_HEADERS,
+    });
   }
 };
 
@@ -187,44 +184,44 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const { song, releaseYear } = body;
-    
+
     // Validate the song data
     const errors = validateSong(song);
     if (errors.length > 0) {
-      return new Response(
-        JSON.stringify({ error: 'Validation failed', errors }),
-        { status: 400, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Validation failed', errors }), {
+        status: 400,
+        headers: CORS_HEADERS,
+      });
     }
-    
+
     // Check if song already exists
     const existingSong = loadSong(song.id);
     if (existingSong) {
-      return new Response(
-        JSON.stringify({ error: 'Song already exists' }),
-        { status: 409, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Song already exists' }), {
+        status: 409,
+        headers: CORS_HEADERS,
+      });
     }
-    
+
     // Save the song
     const success = saveSong(song, releaseYear);
     if (!success) {
-      return new Response(
-        JSON.stringify({ error: 'Failed to save song' }),
-        { status: 500, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Failed to save song' }), {
+        status: 500,
+        headers: CORS_HEADERS,
+      });
     }
-    
-    return new Response(
-      JSON.stringify({ message: 'Song created successfully', song }),
-      { status: 201, headers: CORS_HEADERS }
-    );
+
+    return new Response(JSON.stringify({ message: 'Song created successfully', song }), {
+      status: 201,
+      headers: CORS_HEADERS,
+    });
   } catch (error) {
     console.error('POST /api/songs error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: CORS_HEADERS }
-    );
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: CORS_HEADERS,
+    });
   }
 };
 
@@ -233,25 +230,25 @@ export const PUT: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const { song, releaseYear } = body;
-    
+
     // Validate the song data
     const errors = validateSong(song);
     if (errors.length > 0) {
-      return new Response(
-        JSON.stringify({ error: 'Validation failed', errors }),
-        { status: 400, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Validation failed', errors }), {
+        status: 400,
+        headers: CORS_HEADERS,
+      });
     }
-    
+
     // Check if song exists
     const existingSong = loadSong(song.id);
     if (!existingSong) {
-      return new Response(
-        JSON.stringify({ error: 'Song not found' }),
-        { status: 404, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Song not found' }), {
+        status: 404,
+        headers: CORS_HEADERS,
+      });
     }
-    
+
     // Prevent ID changes - ensure the ID matches the existing song
     if (song.id !== existingSong.id) {
       return new Response(
@@ -259,26 +256,26 @@ export const PUT: APIRoute = async ({ request }) => {
         { status: 400, headers: CORS_HEADERS }
       );
     }
-    
+
     // Save the updated song
     const success = saveSong(song, releaseYear);
     if (!success) {
-      return new Response(
-        JSON.stringify({ error: 'Failed to update song' }),
-        { status: 500, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Failed to update song' }), {
+        status: 500,
+        headers: CORS_HEADERS,
+      });
     }
-    
-    return new Response(
-      JSON.stringify({ message: 'Song updated successfully', song }),
-      { status: 200, headers: CORS_HEADERS }
-    );
+
+    return new Response(JSON.stringify({ message: 'Song updated successfully', song }), {
+      status: 200,
+      headers: CORS_HEADERS,
+    });
   } catch (error) {
     console.error('PUT /api/songs error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: CORS_HEADERS }
-    );
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: CORS_HEADERS,
+    });
   }
 };
 
@@ -287,42 +284,42 @@ export const DELETE: APIRoute = async ({ url }) => {
   try {
     const searchParams = new URL(url).searchParams;
     const songId = searchParams.get('id');
-    
+
     if (!songId) {
-      return new Response(
-        JSON.stringify({ error: 'Song ID is required' }),
-        { status: 400, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Song ID is required' }), {
+        status: 400,
+        headers: CORS_HEADERS,
+      });
     }
-    
+
     // Check if song exists
     const existingSong = loadSong(songId);
     if (!existingSong) {
-      return new Response(
-        JSON.stringify({ error: 'Song not found' }),
-        { status: 404, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Song not found' }), {
+        status: 404,
+        headers: CORS_HEADERS,
+      });
     }
-    
+
     // Delete the song
     const success = deleteSong(songId);
     if (!success) {
-      return new Response(
-        JSON.stringify({ error: 'Failed to delete song' }),
-        { status: 500, headers: CORS_HEADERS }
-      );
+      return new Response(JSON.stringify({ error: 'Failed to delete song' }), {
+        status: 500,
+        headers: CORS_HEADERS,
+      });
     }
-    
-    return new Response(
-      JSON.stringify({ message: 'Song deleted successfully' }),
-      { status: 200, headers: CORS_HEADERS }
-    );
+
+    return new Response(JSON.stringify({ message: 'Song deleted successfully' }), {
+      status: 200,
+      headers: CORS_HEADERS,
+    });
   } catch (error) {
     console.error('DELETE /api/songs error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: CORS_HEADERS }
-    );
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: CORS_HEADERS,
+    });
   }
 };
 
@@ -331,4 +328,4 @@ export const OPTIONS: APIRoute = async () => {
     status: 200,
     headers: CORS_HEADERS,
   });
-}; 
+};

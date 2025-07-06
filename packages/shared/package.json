@@ -31,7 +31,10 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "type-check": "tsc --noEmit",
-    "lint": "echo 'No linting configured for shared package'",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "format": "biome format src/",
+    "format:fix": "biome format --write src/",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -53,4 +56,4 @@
   ],
   "author": "RanolP",
   "license": "MIT"
-} 
+}

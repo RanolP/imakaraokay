@@ -21,4 +21,4 @@ export const useTranslation = () => {
     setLanguage: i18nStore.setLanguage,
     toggleLanguage: i18nStore.toggleLanguage,
   };
-}; 
+};

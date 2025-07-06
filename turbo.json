@@ -14,10 +14,23 @@
       "dependsOn": ["^build"]
     },
     "lint": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "biome.json"]
+    },
+    "lint:fix": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "biome.json"],
+      "cache": false
+    },
+    "format": {
+      "inputs": ["src/**", "biome.json"]
+    },
+    "format:fix": {
+      "inputs": ["src/**", "biome.json"],
+      "cache": false
     },
     "clean": {
       "cache": false
     }
   }
-} 
+}

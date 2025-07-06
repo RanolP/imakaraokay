@@ -19,34 +19,34 @@ interface ArtistOption {
 
 const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) => {
   const { language } = useTranslation();
-  
+
   // Map global language to artist language
   const getInitialLanguage = (): ArtistLanguage => {
     const langMapping = {
       ko: 'korean' as const,
-      en: 'english' as const
+      en: 'english' as const,
     };
-    
+
     const artistLang = langMapping[language()];
-    
+
     // Check if the artist has the preferred language, fallback to original
     if (artistLang && props.artist.name[artistLang]) {
       return artistLang;
     }
-    
+
     return 'original';
   };
 
-  const [selectedLanguage, setSelectedLanguage] = createSignal<ArtistLanguage>(getInitialLanguage());
+  const [selectedLanguage, setSelectedLanguage] = createSignal<ArtistLanguage>(
+    getInitialLanguage()
+  );
   const [isOpen, setIsOpen] = createSignal(false);
   let buttonRef: HTMLButtonElement | undefined;
   let dropdownRef: HTMLDivElement | undefined;
 
   // Get available artist name options based on what's available in the artist
   const getAvailableOptions = createMemo((): ArtistOption[] => {
-    const options: ArtistOption[] = [
-      { key: 'original', label: 'Original', flag: '🌐' },
-    ];
+    const options: ArtistOption[] = [{ key: 'original', label: 'Original', flag: '🌐' }];
 
     if (props.artist.name.japanese) {
       options.push({ key: 'japanese', label: 'Japanese', flag: '🇯🇵' });
@@ -86,16 +86,14 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
     if (language === 'original') {
       return []; // Original names don't have aliases in this structure
     }
-    
+
     const nameData = props.artist.name[language];
     if (nameData && typeof nameData === 'object' && 'aliases' in nameData) {
       const aliases = nameData.aliases || [];
       // Filter out hidden aliases and return only the text
-      return aliases
-        .filter(alias => !alias.hidden)
-        .map(alias => alias.text);
+      return aliases.filter((alias) => !alias.hidden).map((alias) => alias.text);
     }
-    
+
     return [];
   });
 
@@ -123,11 +121,7 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
 
     const { x, y } = await computePosition(buttonRef, dropdownRef, {
       placement: 'bottom-start',
-      middleware: [
-        offset(8),
-        flip(),
-        shift({ padding: 8 }),
-      ],
+      middleware: [offset(8), flip(), shift({ padding: 8 })],
     });
 
     dropdownRef.style.left = `${x}px`;
@@ -136,7 +130,7 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
 
   const handleToggle = async () => {
     if (getAvailableOptions().length <= 1) return; // Don't show dropdown if only one option
-    
+
     setIsOpen(!isOpen());
     if (!isOpen()) {
       await updatePosition();
@@ -150,8 +144,10 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
-      buttonRef && !buttonRef.contains(event.target as Node) &&
-      dropdownRef && !dropdownRef.contains(event.target as Node)
+      buttonRef &&
+      !buttonRef.contains(event.target as Node) &&
+      dropdownRef &&
+      !dropdownRef.contains(event.target as Node)
     ) {
       setIsOpen(false);
     }
@@ -177,9 +173,7 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
         ref={buttonRef}
         onClick={handleToggle}
         class={`text-left transition-colors duration-200 ${
-          hasMultipleOptions() 
-            ? 'hover:text-purple-200 cursor-pointer' 
-            : 'cursor-default'
+          hasMultipleOptions() ? 'hover:text-purple-200 cursor-pointer' : 'cursor-default'
         }`}
         disabled={!hasMultipleOptions()}
       >
@@ -191,19 +185,24 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
             <span class="text-white opacity-75"> ({props.artist.name.original})</span>
           )}
           {hasMultipleOptions() && (
-            <svg 
+            <svg
               class={`inline-block w-6 h-6 ml-2 transition-all duration-200 text-white ${
                 isOpen() ? 'rotate-180' : ''
               }`}
-              fill="none" 
-              stroke="currentColor" 
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           )}
         </h1>
-        
+
         {/* Show aliases for the selected language if any exist */}
         <Show when={getCurrentAliases().length > 0}>
           <div class="text-lg text-white opacity-75 mb-2">
@@ -230,8 +229,8 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
             <button
               onClick={() => handleLanguageSelect(option.key)}
               class={`w-full flex items-start gap-3 px-4 py-3 text-sm text-left transition-colors duration-150 first:rounded-t-lg last:rounded-b-lg ${
-                selectedLanguage() === option.key 
-                  ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' 
+                selectedLanguage() === option.key
+                  ? 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
@@ -255,4 +254,4 @@ const ClickableArtistVariant: Component<ClickableArtistVariantProps> = (props) =
   );
 };
 
-export default ClickableArtistVariant; 
+export default ClickableArtistVariant;

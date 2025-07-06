@@ -1,8 +1,7 @@
 import { Component, createSignal, Show } from 'solid-js';
 import { isServer } from 'solid-js/web';
 
-
-export type KaraokeMachine = 'tj'|'ky'|'ebo'|'joysound';
+export type KaraokeMachine = 'tj' | 'ky' | 'ebo' | 'joysound';
 
 interface KaraokeBadgeProps {
   machine: KaraokeMachine;
@@ -13,7 +12,7 @@ interface KaraokeBadgeProps {
 
 const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
   const [copied, setCopied] = createSignal(false);
-  
+
   const getMachineColors = (machine: KaraokeMachine) => {
     switch (machine) {
       case 'tj':
@@ -22,7 +21,7 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
           bgLight: 'bg-tj-50',
           text: 'text-white',
           textDark: 'text-tj-800',
-          name: 'TJ Media'
+          name: 'TJ Media',
         };
       case 'ky':
         return {
@@ -30,7 +29,7 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
           bgLight: 'bg-ky-50',
           text: 'text-white',
           textDark: 'text-ky-800',
-          name: 'Kumyoung'
+          name: 'Kumyoung',
         };
       case 'joysound':
         return {
@@ -38,7 +37,7 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
           bgLight: 'bg-joysound-50',
           text: 'text-white',
           textDark: 'text-joysound-800',
-          name: 'Joysound'
+          name: 'Joysound',
         };
       case 'ebo':
         return {
@@ -46,7 +45,7 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
           bgLight: 'bg-ebo-50',
           text: 'text-white',
           textDark: 'text-ebo-800',
-          name: 'EBO'
+          name: 'EBO',
         };
       default:
         return {
@@ -54,11 +53,11 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
           bgLight: 'bg-gray-50',
           text: 'text-white',
           textDark: 'text-gray-800',
-          name: 'Unknown'
+          name: 'Unknown',
         };
     }
   };
-  
+
   const getSizeClasses = () => {
     switch (props.size || 'md') {
       case 'sm':
@@ -73,12 +72,12 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
   const copyToClipboard = async (event: Event) => {
     event.preventDefault();
     event.stopPropagation();
-    
+
     if (isServer) return;
-    
+
     try {
       await navigator.clipboard.writeText(props.id);
-      
+
       if (props.showCopyFeedback !== false) {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -102,24 +101,28 @@ const KaraokeBadge: Component<KaraokeBadgeProps> = (props) => {
       title={`Click to copy ${colors.name} ID: ${props.id}`}
     >
       {/* Left side - Machine name */}
-      <div class={`
+      <div
+        class={`
         px-2 flex items-center justify-center font-semibold
         ${colors.bg} ${colors.text}
         transition-colors duration-200
-      `}>
+      `}
+      >
         {colors.name}
       </div>
-      
+
       {/* Right side - ID */}
-      <div class={`
+      <div
+        class={`
         px-2 flex items-center justify-center font-mono
         ${colors.bgLight} ${colors.textDark} border-l border-white/30
         transition-colors duration-200
-      `}>
+      `}
+      >
         {copied() ? '✓ Copied!' : props.id}
       </div>
     </button>
   );
 };
 
-export default KaraokeBadge; 
+export default KaraokeBadge;

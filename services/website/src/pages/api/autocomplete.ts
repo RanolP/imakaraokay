@@ -17,8 +17,8 @@ export const GET: APIRoute = async ({ url }) => {
     'Access-Control-Allow-Headers': 'Content-Type',
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-cache, no-store, must-revalidate',
-    'Pragma': 'no-cache',
-    'Expires': '0'
+    Pragma: 'no-cache',
+    Expires: '0',
   };
 
   try {
@@ -33,33 +33,32 @@ export const GET: APIRoute = async ({ url }) => {
     // Initialize logger and search engine
     const logger = new Logger();
     const searchEngine = new SearchEngine(logger);
-    
+
     // Add YouTube autocomplete provider
     const youtubeProvider = new YouTubeAutocompleteProvider(logger);
     searchEngine.addAutocompleteProvider(youtubeProvider);
 
     // Get autocomplete suggestions
     const autocompleteResults = await searchEngine.getAutocompleteSuggestions(query);
-    
-    // Convert to YouTube autocomplete API format for compatibility
-    const suggestions = autocompleteResults.suggestions.map(result => result.suggestion);
-    const response = [query, suggestions, [], {}];
-    
-    return new Response(JSON.stringify(response), { headers });
 
+    // Convert to YouTube autocomplete API format for compatibility
+    const suggestions = autocompleteResults.suggestions.map((result) => result.suggestion);
+    const response = [query, suggestions, [], {}];
+
+    return new Response(JSON.stringify(response), { headers });
   } catch (error) {
     console.error('Autocomplete API error:', error);
-    
+
     const errorResponse = [
       url.searchParams.get('q') || '',
       [],
       [],
-      { error: error instanceof Error ? error.message : 'Unknown error' }
+      { error: error instanceof Error ? error.message : 'Unknown error' },
     ];
 
     return new Response(JSON.stringify(errorResponse), {
       status: 500,
-      headers
+      headers,
     });
   }
 };
@@ -70,7 +69,7 @@ export const OPTIONS: APIRoute = async () => {
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
-    }
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
   });
-}; 
+};

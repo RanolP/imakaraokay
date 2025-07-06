@@ -1,7 +1,11 @@
 import Fuse from 'fuse.js';
 import type { Song, Artist } from '../../../types/song';
 import type { SearchOptions, SearchResult, LanguagePreference } from '../types';
-import { normalizeForSearch, normalizeArrayForSearch, safeNormalizeForSearch } from '../utils/normalization';
+import {
+  normalizeForSearch,
+  normalizeArrayForSearch,
+  safeNormalizeForSearch,
+} from '../utils/normalization';
 
 // Interface for normalized song data used by Fuse.js
 interface NormalizedSong extends Song {
@@ -71,34 +75,46 @@ export class SearchService {
   setSongs(songs: Song[], artists: Artist[] = []) {
     this.songs = songs;
     this.artists = artists;
-    
+
     // Create a map of artist ID to artist data for quick lookup
-    this.artistsMap = new Map(artists.map(artist => [artist.id, artist]));
-    
+    this.artistsMap = new Map(artists.map((artist) => [artist.id, artist]));
+
     this.normalizedSongs = this.createNormalizedSongs(songs);
     this.normalizedArtists = this.createNormalizedArtists(artists);
     this.initializeFuse();
   }
 
   private createNormalizedArtists(artists: Artist[]): NormalizedArtist[] {
-    return artists.map(artist => {
+    return artists.map((artist) => {
       const normalizedArtist: NormalizedArtist = {
         ...artist,
         _normalized: {
           name: {
             original: normalizeForSearch(artist.name.original),
-            japanese: artist.name.japanese ? {
-              main: normalizeForSearch(artist.name.japanese.main),
-              aliases: normalizeArrayForSearch(artist.name.japanese.aliases?.map(alias => alias.text) || []),
-            } : undefined,
-            english: artist.name.english ? {
-              main: normalizeForSearch(artist.name.english.main),
-              aliases: normalizeArrayForSearch(artist.name.english.aliases?.map(alias => alias.text) || []),
-            } : undefined,
-            korean: artist.name.korean ? {
-              main: normalizeForSearch(artist.name.korean.main),
-              aliases: normalizeArrayForSearch(artist.name.korean.aliases?.map(alias => alias.text) || []),
-            } : undefined,
+            japanese: artist.name.japanese
+              ? {
+                  main: normalizeForSearch(artist.name.japanese.main),
+                  aliases: normalizeArrayForSearch(
+                    artist.name.japanese.aliases?.map((alias) => alias.text) || []
+                  ),
+                }
+              : undefined,
+            english: artist.name.english
+              ? {
+                  main: normalizeForSearch(artist.name.english.main),
+                  aliases: normalizeArrayForSearch(
+                    artist.name.english.aliases?.map((alias) => alias.text) || []
+                  ),
+                }
+              : undefined,
+            korean: artist.name.korean
+              ? {
+                  main: normalizeForSearch(artist.name.korean.main),
+                  aliases: normalizeArrayForSearch(
+                    artist.name.korean.aliases?.map((alias) => alias.text) || []
+                  ),
+                }
+              : undefined,
           },
           id: normalizeForSearch(artist.id),
         },
@@ -109,43 +125,49 @@ export class SearchService {
   }
 
   private createNormalizedSongs(songs: Song[]): NormalizedSong[] {
-    return songs.map(song => {
+    return songs.map((song) => {
       // Collect all artist names in all languages
       const artistNames = {
         original: [] as string[],
         japanese: [] as string[],
         english: [] as string[],
         korean: [] as string[],
-        aliases: [] as string[]
+        aliases: [] as string[],
       };
 
-      song.artists.forEach(artistId => {
+      song.artists.forEach((artistId) => {
         const artist = this.artistsMap.get(artistId);
         if (artist) {
           // Add original name
           artistNames.original.push(artist.name.original);
-          
+
           // Add Japanese names and aliases
           if (artist.name.japanese) {
             artistNames.japanese.push(artist.name.japanese.main);
             if (artist.name.japanese.aliases) {
-              artistNames.aliases.push(...artist.name.japanese.aliases.map((alias: any) => alias.text));
+              artistNames.aliases.push(
+                ...artist.name.japanese.aliases.map((alias: any) => alias.text)
+              );
             }
           }
-          
+
           // Add English names and aliases
           if (artist.name.english) {
             artistNames.english.push(artist.name.english.main);
             if (artist.name.english.aliases) {
-              artistNames.aliases.push(...artist.name.english.aliases.map((alias: any) => alias.text));
+              artistNames.aliases.push(
+                ...artist.name.english.aliases.map((alias: any) => alias.text)
+              );
             }
           }
-          
+
           // Add Korean names and aliases
           if (artist.name.korean) {
             artistNames.korean.push(artist.name.korean.main);
             if (artist.name.korean.aliases) {
-              artistNames.aliases.push(...artist.name.korean.aliases.map((alias: any) => alias.text));
+              artistNames.aliases.push(
+                ...artist.name.korean.aliases.map((alias: any) => alias.text)
+              );
             }
           }
         }
@@ -156,18 +178,30 @@ export class SearchService {
         _normalized: {
           title: {
             original: normalizeForSearch(song.title.original),
-            japanese: song.title.japanese ? {
-              main: normalizeForSearch(song.title.japanese.main),
-              aliases: normalizeArrayForSearch(song.title.japanese.aliases?.map(alias => alias.text) || []),
-            } : undefined,
-            english: song.title.english ? {
-              main: normalizeForSearch(song.title.english.main),
-              aliases: normalizeArrayForSearch(song.title.english.aliases?.map(alias => alias.text) || []),
-            } : undefined,
-            korean: song.title.korean ? {
-              main: normalizeForSearch(song.title.korean.main),
-              aliases: normalizeArrayForSearch(song.title.korean.aliases?.map(alias => alias.text) || []),
-            } : undefined,
+            japanese: song.title.japanese
+              ? {
+                  main: normalizeForSearch(song.title.japanese.main),
+                  aliases: normalizeArrayForSearch(
+                    song.title.japanese.aliases?.map((alias) => alias.text) || []
+                  ),
+                }
+              : undefined,
+            english: song.title.english
+              ? {
+                  main: normalizeForSearch(song.title.english.main),
+                  aliases: normalizeArrayForSearch(
+                    song.title.english.aliases?.map((alias) => alias.text) || []
+                  ),
+                }
+              : undefined,
+            korean: song.title.korean
+              ? {
+                  main: normalizeForSearch(song.title.korean.main),
+                  aliases: normalizeArrayForSearch(
+                    song.title.korean.aliases?.map((alias) => alias.text) || []
+                  ),
+                }
+              : undefined,
           },
           artists: normalizeArrayForSearch(song.artists),
           artistNames: {
@@ -237,7 +271,10 @@ export class SearchService {
   }
 
   search(options: SearchOptions): SearchResult {
-    if ((!this.songFuse || this.normalizedSongs.length === 0) && (!this.artistFuse || this.normalizedArtists.length === 0)) {
+    if (
+      (!this.songFuse || this.normalizedSongs.length === 0) &&
+      (!this.artistFuse || this.normalizedArtists.length === 0)
+    ) {
       return {
         songs: [],
         artists: [],
@@ -252,13 +289,13 @@ export class SearchService {
     if (options.query.trim()) {
       // Normalize the search query using NFKD
       const normalizedQuery = normalizeForSearch(options.query);
-      
+
       // Search songs
       if (this.songFuse && this.normalizedSongs.length > 0) {
         const songFuseResults = this.songFuse.search(normalizedQuery, {
           limit: options.limit || 50,
         });
-        songResults = songFuseResults.map(result => result.item);
+        songResults = songFuseResults.map((result) => result.item);
       }
 
       // Search artists
@@ -266,7 +303,7 @@ export class SearchService {
         const artistFuseResults = this.artistFuse.search(normalizedQuery, {
           limit: 10, // Limit artist results to keep UI manageable
         });
-        artistResults = artistFuseResults.map(result => result.item);
+        artistResults = artistFuseResults.map((result) => result.item);
       }
     } else {
       // Return all songs and artists if no query
@@ -287,17 +324,14 @@ export class SearchService {
     };
   }
 
-  private applyFilters(
-    songs: Song[], 
-    filters: NonNullable<SearchOptions['filters']>
-  ): Song[] {
+  private applyFilters(songs: Song[], filters: NonNullable<SearchOptions['filters']>): Song[] {
     let filtered = songs;
 
     // Filter by artist
     if (filters.artist) {
       const normalizedFilterArtist = normalizeForSearch(filters.artist);
-      filtered = filtered.filter(song => 
-        song.artists.some(artistId => 
+      filtered = filtered.filter((song) =>
+        song.artists.some((artistId) =>
           normalizeForSearch(artistId).includes(normalizedFilterArtist)
         )
       );
@@ -305,14 +339,19 @@ export class SearchService {
 
     // Filter by karaoke machine availability
     if (filters.hasKaraokeId) {
-      filtered = filtered.filter(song => {
-        return filters.hasKaraokeId!.some(machine => {
+      filtered = filtered.filter((song) => {
+        return filters.hasKaraokeId!.some((machine) => {
           switch (machine) {
-            case 'tj': return !!song.karaoke.tj;
-            case 'ky': return !!song.karaoke.ky;
-            case 'ebo': return !!song.karaoke.ebo;
-            case 'joysound': return !!song.karaoke.joysound;
-            default: return false;
+            case 'tj':
+              return !!song.karaoke.tj;
+            case 'ky':
+              return !!song.karaoke.ky;
+            case 'ebo':
+              return !!song.karaoke.ebo;
+            case 'joysound':
+              return !!song.karaoke.joysound;
+            default:
+              return false;
           }
         });
       });
@@ -331,28 +370,28 @@ export class SearchService {
 
   getAllTitleVariants(song: Song): string[] {
     const variants = [song.title.original];
-    
+
     if (song.title.japanese) {
       variants.push(song.title.japanese.main);
       if (song.title.japanese.aliases) {
-        variants.push(...song.title.japanese.aliases.map(alias => alias.text));
+        variants.push(...song.title.japanese.aliases.map((alias) => alias.text));
       }
     }
-    
+
     if (song.title.english) {
       variants.push(song.title.english.main);
       if (song.title.english.aliases) {
-        variants.push(...song.title.english.aliases.map(alias => alias.text));
+        variants.push(...song.title.english.aliases.map((alias) => alias.text));
       }
     }
-    
+
     if (song.title.korean) {
       variants.push(song.title.korean.main);
       if (song.title.korean.aliases) {
-        variants.push(...song.title.korean.aliases.map(alias => alias.text));
+        variants.push(...song.title.korean.aliases.map((alias) => alias.text));
       }
     }
-    
+
     return [...new Set(variants)]; // Remove duplicates
   }
 
@@ -367,4 +406,4 @@ export class SearchService {
 }
 
 // Export singleton instance
-export const searchService = new SearchService(); 
+export const searchService = new SearchService();

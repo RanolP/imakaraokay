@@ -51,7 +51,7 @@ export class SongService {
         // Get all song files in the year directory
         // We'll use a known list of song IDs for now, but this could be made more dynamic
         const songIds = this.getKnownSongIds(year);
-        
+
         for (const songId of songIds) {
           try {
             const songResponse = await fetch(`/data/songs/${year}/${songId}.json`);
@@ -69,7 +69,7 @@ export class SongService {
     }
 
     this.songs = loadedSongs;
-    
+
     if (this.songs.length === 0) {
       console.warn('No songs loaded from directory structure');
     }
@@ -80,9 +80,9 @@ export class SongService {
     const songsByYear: { [key: string]: string[] } = {
       '2018': ['lemon'],
       '2019': ['yoru-ni-kakeru', 'gurenge'],
-      '2020': ['dynamite']
+      '2020': ['dynamite'],
     };
-    
+
     return songsByYear[year] || [];
   }
 
@@ -95,10 +95,10 @@ export class SongService {
     // For each artist, try to find them in any of the year directories
     for (const artistId of artistIds) {
       let artistFound = false;
-      
+
       for (const year of knownYears) {
         if (artistFound) break; // Skip remaining years once found
-        
+
         try {
           const artistResponse = await fetch(`/data/artists/${year}/${artistId}.json`);
           if (artistResponse.ok) {
@@ -113,7 +113,7 @@ export class SongService {
     }
 
     this.artists = loadedArtists;
-    
+
     // If no artists were loaded, generate from songs as fallback
     if (this.artists.length === 0) {
       this.generateArtistsFromSongs();
@@ -123,8 +123,8 @@ export class SongService {
   private getKnownArtistIds(): string[] {
     // Extract unique artist IDs from songs data
     const artistIds = new Set<string>();
-    this.songs.forEach(song => {
-      song.artists.forEach(id => artistIds.add(id));
+    this.songs.forEach((song) => {
+      song.artists.forEach((id) => artistIds.add(id));
     });
     return Array.from(artistIds);
   }
@@ -132,8 +132,8 @@ export class SongService {
   private generateArtistsFromSongs() {
     const artistMap = new Map<string, Set<string>>();
 
-    this.songs.forEach(song => {
-      song.artists.forEach(artistId => {
+    this.songs.forEach((song) => {
+      song.artists.forEach((artistId) => {
         if (!artistMap.has(artistId)) {
           artistMap.set(artistId, new Set());
         }
@@ -152,11 +152,11 @@ export class SongService {
   }
 
   getSongById(id: string): Song | undefined {
-    return this.songs.find(song => song.id === id);
+    return this.songs.find((song) => song.id === id);
   }
 
   getArtistById(id: string): Artist | undefined {
-    return this.artists.find(artist => artist.id === id);
+    return this.artists.find((artist) => artist.id === id);
   }
 
   getAllSongs(): Song[] {
@@ -179,14 +179,20 @@ export class SongService {
   }
 
   // Helper methods to get display strings from multilingual content
-  getDisplayTitle(song: Song, preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original'): string {
+  getDisplayTitle(
+    song: Song,
+    preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original'
+  ): string {
     if (preferredLang !== 'original' && song.title[preferredLang]) {
       return song.title[preferredLang]!.main;
     }
     return song.title.original;
   }
 
-  getDisplayArtist(artistId: string, preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original'): string {
+  getDisplayArtist(
+    artistId: string,
+    preferredLang: 'original' | 'japanese' | 'english' | 'korean' = 'original'
+  ): string {
     const artist = this.getArtistById(artistId);
     if (!artist) return artistId;
 
@@ -202,4 +208,4 @@ export class SongService {
 }
 
 // Export singleton instance
-export const songService = new SongService(); 
+export const songService = new SongService();

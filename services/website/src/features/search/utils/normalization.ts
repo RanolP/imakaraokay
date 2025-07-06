@@ -18,7 +18,7 @@ export function normalizeForSearch(text: string): string {
  * @returns Array of normalized texts
  */
 export function normalizeArrayForSearch(texts: string[]): string[] {
-  return texts.map(text => normalizeForSearch(text));
+  return texts.map((text) => normalizeForSearch(text));
 }
 
 /**
@@ -28,4 +28,4 @@ export function normalizeArrayForSearch(texts: string[]): string[] {
  */
 export function safeNormalizeForSearch(text: string | undefined): string {
   return text ? normalizeForSearch(text) : '';
-} 
+}

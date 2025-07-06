@@ -12,15 +12,18 @@ export interface FormattedSongItem {
  * ⟨{{current language}} (if it is different to original, {{original}})⟩ -− {{artist in current language}}
  * {{song ids}}
  */
-export function formatSongListItem(song: Song, currentLanguage: Language = 'ko'): FormattedSongItem {
+export function formatSongListItem(
+  song: Song,
+  currentLanguage: Language = 'ko'
+): FormattedSongItem {
   // Map i18n language to song title language
   const langMapping: Record<Language, keyof Song['title']> = {
     ko: 'korean',
-    en: 'english'
+    en: 'english',
   };
 
   const songLang = langMapping[currentLanguage];
-  
+
   // Get title in current language, fallback to original
   let currentTitle = song.title.original;
   if (songLang && song.title[songLang]) {
@@ -42,13 +45,14 @@ export function formatSongListItem(song: Song, currentLanguage: Language = 'ko')
 
   // Get artist names in current language
   const artistNames = song.artists
-    .map(artistId => {
+    .map((artistId) => {
       // Map i18n language to artist language preference
-      const artistLangPreference: Record<Language, 'original' | 'japanese' | 'english' | 'korean'> = {
-        ko: 'korean',
-        en: 'english'
-      };
-      
+      const artistLangPreference: Record<Language, 'original' | 'japanese' | 'english' | 'korean'> =
+        {
+          ko: 'korean',
+          en: 'english',
+        };
+
       return songService.getDisplayArtist(artistId, artistLangPreference[currentLanguage]);
     })
     .join(', ');
@@ -61,12 +65,12 @@ export function formatSongListItem(song: Song, currentLanguage: Language = 'ko')
   if (song.karaoke.ky) ids.push(`KY:${song.karaoke.ky}`);
   if (song.karaoke.ebo) ids.push(`EBO:${song.karaoke.ebo}`);
   if (song.karaoke.joysound) ids.push(`JS:${song.karaoke.joysound}`);
-  
+
   const idsLine = ids.join(' ');
 
   return {
     titleLine,
-    idsLine
+    idsLine,
   };
 }
 
@@ -76,4 +80,4 @@ export function formatSongListItem(song: Song, currentLanguage: Language = 'ko')
 export function formatSongListItemAsString(song: Song, currentLanguage: Language = 'ko'): string {
   const formatted = formatSongListItem(song, currentLanguage);
   return `${formatted.titleLine}\n${formatted.idsLine}`;
-} 
+}

@@ -6,7 +6,7 @@ export const en: TranslationKeys = {
     about: 'About',
     error: 'Error',
   },
-  
+
   home: {
     title: '🎤 imakaraokay',
     subtitle: 'Find your favorite songs across all karaoke machines',
@@ -19,19 +19,19 @@ export const en: TranslationKeys = {
     popularSongs: '🔥 Popular Songs',
     loading: 'Loading songs...',
   },
-  
+
   about: {
     title: 'About',
     description: 'A page all about this website.',
     weLovenpm: 'We love',
   },
-  
+
   common: {
     search: 'Search',
     loading: 'Loading',
     error: 'Error',
   },
-  
+
   song: {
     artists: 'Artists',
     originalTitle: 'Original Title',
@@ -40,4 +40,4 @@ export const en: TranslationKeys = {
     noLyrics: 'No lyrics available',
     availableOn: 'Available on',
   },
-}; 
+};

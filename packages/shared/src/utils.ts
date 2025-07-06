@@ -6,25 +6,25 @@ export const KARAOKE_MACHINES: Record<KaraokeProvider, KaraokeMachineInfo> = {
     id: 'TJ',
     name: 'TJ Karaoke',
     color: '#00AFEC',
-    website: 'https://www.tjmedia.co.kr'
+    website: 'https://www.tjmedia.co.kr',
   },
   KY: {
     id: 'KY',
     name: 'KY Karaoke',
     color: '#8877dd',
-    website: 'https://www.kysing.kr'
+    website: 'https://www.kysing.kr',
   },
   Joysound: {
     id: 'Joysound',
     name: 'Joysound',
     color: '#d70e18',
-    website: 'https://www.joysound.com'
+    website: 'https://www.joysound.com',
   },
   EBO: {
     id: 'EBO',
     name: 'EBO Karaoke',
-    color: '#6b7280'
-  }
+    color: '#6b7280',
+  },
 };
 
 // Text normalization utilities
@@ -54,7 +54,7 @@ export function createSlug(text: string): string {
 // Validation utilities
 export function isValidKaraokeId(id: string, provider: KaraokeProvider): boolean {
   if (!id || id.trim() === '') return false;
-  
+
   switch (provider) {
     case 'TJ':
       return /^\d{5,6}$/.test(id);
@@ -67,4 +67,4 @@ export function isValidKaraokeId(id: string, provider: KaraokeProvider): boolean
     default:
       return false;
   }
-} 
+}

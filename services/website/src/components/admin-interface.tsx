@@ -62,17 +62,17 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
   const [loading, setLoading] = createSignal(false);
   const [error, setError] = createSignal<string | null>(null);
   const [success, setSuccess] = createSignal<string | null>(null);
-  
+
   // Search and filter states
   const [songSearchQuery, setSongSearchQuery] = createSignal('');
   const [artistSearchQuery, setArtistSearchQuery] = createSignal('');
-  
+
   // Form states
   const [editingSong, setEditingSong] = createSignal<Song | null>(null);
   const [editingArtist, setEditingArtist] = createSignal<Artist | null>(null);
   const [showSongForm, setShowSongForm] = createSignal(false);
   const [showArtistForm, setShowArtistForm] = createSignal(false);
-  
+
   // Form data
   const [songFormData, setSongFormData] = createSignal<SongFormData>({
     id: '',
@@ -80,7 +80,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
     artists: [],
     karaoke: {},
   });
-  
+
   const [artistFormData, setArtistFormData] = createSignal<ArtistFormData>({
     id: '',
     name: { original: '' },
@@ -142,19 +142,21 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
   const filteredSongs = () => {
     const query = songSearchQuery().toLowerCase();
     if (!query) return songs();
-    return songs().filter(song => 
-      song.id.toLowerCase().includes(query) ||
-      song.title.original.toLowerCase().includes(query) ||
-      song.artists.some(artistId => artistId.toLowerCase().includes(query))
+    return songs().filter(
+      (song) =>
+        song.id.toLowerCase().includes(query) ||
+        song.title.original.toLowerCase().includes(query) ||
+        song.artists.some((artistId) => artistId.toLowerCase().includes(query))
     );
   };
 
   const filteredArtists = () => {
     const query = artistSearchQuery().toLowerCase();
     if (!query) return artists();
-    return artists().filter(artist => 
-      artist.id.toLowerCase().includes(query) ||
-      artist.name.original.toLowerCase().includes(query)
+    return artists().filter(
+      (artist) =>
+        artist.id.toLowerCase().includes(query) ||
+        artist.name.original.toLowerCase().includes(query)
     );
   };
 
@@ -184,7 +186,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       resetSongForm();
       return;
     }
-    
+
     setSongFormData({
       id: song.id,
       title: song.title,
@@ -203,7 +205,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       resetArtistForm();
       return;
     }
-    
+
     setArtistFormData({
       id: artist.id,
       name: artist.name,
@@ -219,7 +221,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       resetSongForm();
       return;
     }
-    
+
     setSongFormData({
       id: '',
       title: { original: '' },
@@ -236,7 +238,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
       resetArtistForm();
       return;
     }
-    
+
     setArtistFormData({
       id: '',
       name: { original: '' },
@@ -255,7 +257,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ song: data }),
       });
-      
+
       const result = await response.json();
       if (response.ok) {
         setSuccess(editingSong() ? 'Song updated successfully' : 'Song created successfully');
@@ -281,7 +283,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ artist: data }),
       });
-      
+
       const result = await response.json();
       if (response.ok) {
         setSuccess(editingArtist() ? 'Artist updated successfully' : 'Artist created successfully');
@@ -299,13 +301,13 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
 
   const handleDeleteSong = async (songId: string) => {
     if (!confirm('Are you sure you want to delete this song?')) return;
-    
+
     try {
       setLoading(true);
       const response = await fetch(`/api/songs?id=${songId}`, {
         method: 'DELETE',
       });
-      
+
       const result = await response.json();
       if (response.ok) {
         setSuccess('Song deleted successfully');
@@ -322,13 +324,13 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
 
   const handleDeleteArtist = async (artistId: string) => {
     if (!confirm('Are you sure you want to delete this artist?')) return;
-    
+
     try {
       setLoading(true);
       const response = await fetch(`/api/artists?id=${artistId}`, {
         method: 'DELETE',
       });
-      
+
       const result = await response.json();
       if (response.ok) {
         setSuccess('Artist deleted successfully');
@@ -344,14 +346,14 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
   };
 
   const updateSongFormField = (field: string, value: any) => {
-    setSongFormData(prev => ({
+    setSongFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
   const updateArtistFormField = (field: string, value: any) => {
-    setArtistFormData(prev => ({
+    setArtistFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -360,7 +362,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
   const addArtistToSong = () => {
     const newArtist = prompt('Enter artist ID:');
     if (newArtist && newArtist.trim()) {
-      setSongFormData(prev => ({
+      setSongFormData((prev) => ({
         ...prev,
         artists: [...prev.artists, newArtist.trim()],
       }));
@@ -368,24 +370,18 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
   };
 
   const removeArtistFromSong = (index: number) => {
-    setSongFormData(prev => ({
+    setSongFormData((prev) => ({
       ...prev,
       artists: prev.artists.filter((_, i) => i !== index),
     }));
   };
 
-
-
   const SongForm = () => (
     <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
-      <h3 class="text-lg font-medium mb-4">
-        {editingSong() ? 'Edit Song' : 'Add New Song'}
-      </h3>
+      <h3 class="text-lg font-medium mb-4">{editingSong() ? 'Edit Song' : 'Add New Song'}</h3>
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Song ID *
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Song ID *</label>
           <input
             type="text"
             value={songFormData().id}
@@ -403,24 +399,25 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
             </p>
           </Show>
         </div>
-        
+
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Original Title *
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Original Title *</label>
           <input
             type="text"
             value={songFormData().title.original}
-            onInput={(e) => updateSongFormField('title', { ...songFormData().title, original: e.currentTarget.value })}
+            onInput={(e) =>
+              updateSongFormField('title', {
+                ...songFormData().title,
+                original: e.currentTarget.value,
+              })
+            }
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="e.g., 紅蓮華"
           />
         </div>
-        
+
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Artists *
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Artists *</label>
           <div class="space-y-2">
             <For each={songFormData().artists}>
               {(artist, index) => (
@@ -444,66 +441,73 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
                 </div>
               )}
             </For>
-            <button
-              onClick={addArtistToSong}
-              class="text-blue-600 hover:text-blue-800 text-sm"
-            >
+            <button onClick={addArtistToSong} class="text-blue-600 hover:text-blue-800 text-sm">
               + Add Artist
             </button>
           </div>
         </div>
-        
+
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              TJ Karaoke ID
-            </label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">TJ Karaoke ID</label>
             <input
               type="text"
               value={songFormData().karaoke.tj || ''}
-              onInput={(e) => updateSongFormField('karaoke', { ...songFormData().karaoke, tj: e.currentTarget.value })}
+              onInput={(e) =>
+                updateSongFormField('karaoke', {
+                  ...songFormData().karaoke,
+                  tj: e.currentTarget.value,
+                })
+              }
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              KY Karaoke ID
-            </label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">KY Karaoke ID</label>
             <input
               type="text"
               value={songFormData().karaoke.ky || ''}
-              onInput={(e) => updateSongFormField('karaoke', { ...songFormData().karaoke, ky: e.currentTarget.value })}
+              onInput={(e) =>
+                updateSongFormField('karaoke', {
+                  ...songFormData().karaoke,
+                  ky: e.currentTarget.value,
+                })
+              }
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              EBO Karaoke ID
-            </label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">EBO Karaoke ID</label>
             <input
               type="text"
               value={songFormData().karaoke.ebo || ''}
-              onInput={(e) => updateSongFormField('karaoke', { ...songFormData().karaoke, ebo: e.currentTarget.value })}
+              onInput={(e) =>
+                updateSongFormField('karaoke', {
+                  ...songFormData().karaoke,
+                  ebo: e.currentTarget.value,
+                })
+              }
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Joysound Karaoke ID
-            </label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Joysound Karaoke ID</label>
             <input
               type="text"
               value={songFormData().karaoke.joysound || ''}
-              onInput={(e) => updateSongFormField('karaoke', { ...songFormData().karaoke, joysound: e.currentTarget.value })}
+              onInput={(e) =>
+                updateSongFormField('karaoke', {
+                  ...songFormData().karaoke,
+                  joysound: e.currentTarget.value,
+                })
+              }
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
         </div>
-        
+
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Release Date
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Release Date</label>
           <input
             type="date"
             value={songFormData().releaseDate || ''}
@@ -511,11 +515,9 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
-        
+
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Lyrics
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Lyrics</label>
           <textarea
             value={songFormData().lyrics || ''}
             onInput={(e) => updateSongFormField('lyrics', e.currentTarget.value)}
@@ -524,7 +526,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
           />
         </div>
       </div>
-      
+
       <div class="flex justify-end space-x-3 mt-6">
         <button
           onClick={resetSongForm}
@@ -537,7 +539,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
           disabled={loading()}
           class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50"
         >
-          {loading() ? 'Saving...' : (editingSong() ? 'Update' : 'Create')}
+          {loading() ? 'Saving...' : editingSong() ? 'Update' : 'Create'}
         </button>
       </div>
     </div>
@@ -545,14 +547,10 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
 
   const ArtistForm = () => (
     <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
-      <h3 class="text-lg font-medium mb-4">
-        {editingArtist() ? 'Edit Artist' : 'Add New Artist'}
-      </h3>
+      <h3 class="text-lg font-medium mb-4">{editingArtist() ? 'Edit Artist' : 'Add New Artist'}</h3>
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Artist ID *
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Artist ID *</label>
           <input
             type="text"
             value={artistFormData().id}
@@ -570,26 +568,25 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
             </p>
           </Show>
         </div>
-        
+
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Original Name *
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Original Name *</label>
           <input
             type="text"
             value={artistFormData().name.original}
-            onInput={(e) => updateArtistFormField('name', { ...artistFormData().name, original: e.currentTarget.value })}
+            onInput={(e) =>
+              updateArtistFormField('name', {
+                ...artistFormData().name,
+                original: e.currentTarget.value,
+              })
+            }
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="e.g., LiSA"
           />
         </div>
-        
-
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Debut Date
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Debut Date</label>
           <input
             type="date"
             value={artistFormData().debutDate || ''}
@@ -598,7 +595,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
           />
         </div>
       </div>
-      
+
       <div class="flex justify-end space-x-3 mt-6">
         <button
           onClick={resetArtistForm}
@@ -611,7 +608,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
           disabled={loading()}
           class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50"
         >
-          {loading() ? 'Saving...' : (editingArtist() ? 'Update' : 'Create')}
+          {loading() ? 'Saving...' : editingArtist() ? 'Update' : 'Create'}
         </button>
       </div>
     </div>
@@ -625,7 +622,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
           {success()}
         </div>
       </Show>
-      
+
       <Show when={error()}>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error()}
@@ -668,9 +665,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
               onInput={(e) => setSongSearchQuery(e.currentTarget.value)}
               class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
-            <span class="text-gray-500 text-sm">
-              {filteredSongs().length} songs
-            </span>
+            <span class="text-gray-500 text-sm">{filteredSongs().length} songs</span>
           </div>
 
           {/* Songs List */}
@@ -678,11 +673,11 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
             <Show when={loading()}>
               <div class="p-4 text-center text-gray-500">Loading...</div>
             </Show>
-            
+
             <Show when={!loading() && filteredSongs().length === 0}>
               <div class="p-4 text-center text-gray-500">No songs found</div>
             </Show>
-            
+
             <Show when={!loading() && filteredSongs().length > 0}>
               <div class="divide-y divide-gray-200">
                 <For each={filteredSongs()}>
@@ -728,7 +723,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Edit Song Form - appears in place */}
                       <Show when={editingSong()?.id === song.id && showSongForm()}>
                         <div class="border-t border-gray-200 bg-gray-50 p-4">
@@ -772,9 +767,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
                 onInput={(e) => setArtistSearchQuery(e.currentTarget.value)}
                 class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-              <span class="text-gray-500 text-sm">
-                {filteredArtists().length} artists
-              </span>
+              <span class="text-gray-500 text-sm">{filteredArtists().length} artists</span>
             </div>
             <button
               onClick={handleAddArtist}
@@ -794,11 +787,11 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
             <Show when={loading()}>
               <div class="p-4 text-center text-gray-500">Loading...</div>
             </Show>
-            
+
             <Show when={!loading() && filteredArtists().length === 0}>
               <div class="p-4 text-center text-gray-500">No artists found</div>
             </Show>
-            
+
             <Show when={!loading() && filteredArtists().length > 0}>
               <div class="divide-y divide-gray-200">
                 <For each={filteredArtists()}>
@@ -819,7 +812,9 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
                               onClick={() => handleEditArtist(artist)}
                               class="text-blue-600 hover:text-blue-800 text-sm"
                             >
-                              {editingArtist()?.id === artist.id && showArtistForm() ? 'Cancel' : 'Edit'}
+                              {editingArtist()?.id === artist.id && showArtistForm()
+                                ? 'Cancel'
+                                : 'Edit'}
                             </button>
                             <button
                               onClick={() => handleDeleteArtist(artist.id)}
@@ -830,7 +825,7 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Edit Artist Form - appears in place */}
                       <Show when={editingArtist()?.id === artist.id && showArtistForm()}>
                         <div class="border-t border-gray-200 bg-gray-50 p-4">
@@ -849,4 +844,4 @@ const AdminInterface: Component<AdminInterfaceProps> = (props) => {
   );
 };
 
-export default AdminInterface; 
+export default AdminInterface;

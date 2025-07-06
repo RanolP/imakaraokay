@@ -2,7 +2,7 @@ import { Component, For } from 'solid-js';
 import type { Song } from '../types/song';
 import KaraokeBadge from './karaoke-badge';
 
-export type KaraokeMachine = 'tj'|'ky'|'ebo'|'joysound';
+export type KaraokeMachine = 'tj' | 'ky' | 'ebo' | 'joysound';
 
 interface KaraokeBadgesProps {
   song: Song;
@@ -14,7 +14,7 @@ interface KaraokeBadgesProps {
 const KaraokeBadges: Component<KaraokeBadgesProps> = (props) => {
   const getAvailableMachines = (): Array<{ machine: KaraokeMachine; id: string }> => {
     const machines: Array<{ machine: KaraokeMachine; id: string }> = [];
-    
+
     if (props.song.karaoke.tj) {
       machines.push({ machine: 'tj', id: props.song.karaoke.tj });
     }
@@ -27,7 +27,7 @@ const KaraokeBadges: Component<KaraokeBadgesProps> = (props) => {
     if (props.song.karaoke.joysound) {
       machines.push({ machine: 'joysound', id: props.song.karaoke.joysound });
     }
-    
+
     return machines;
   };
 
@@ -41,11 +41,7 @@ const KaraokeBadges: Component<KaraokeBadgesProps> = (props) => {
   const availableMachines = getAvailableMachines();
 
   if (availableMachines.length === 0) {
-    return (
-      <div class="text-sm text-gray-500 italic">
-        No karaoke machine IDs available
-      </div>
-    );
+    return <div class="text-sm text-gray-500 italic">No karaoke machine IDs available</div>;
   }
 
   return (
@@ -64,4 +60,4 @@ const KaraokeBadges: Component<KaraokeBadgesProps> = (props) => {
   );
 };
 
-export default KaraokeBadges; 
+export default KaraokeBadges;

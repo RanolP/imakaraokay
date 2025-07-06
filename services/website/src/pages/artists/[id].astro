@@ -9,152 +9,128 @@ import { resolve } from 'path';
 export const prerender = true;
 
 export async function getStaticPaths() {
-    const { readdirSync } = await import('fs');
-    const artists: Artist[] = [];
-    const songs: Song[] = [];
+  const { readdirSync } = await import('fs');
+  const artists: Artist[] = [];
+  const songs: Song[] = [];
 
-    // First load all songs (needed for artist pages to show song details)
-    try {
-        const songsBasePath = resolve('./public/data/songs');
-        const songYearDirectories = readdirSync(songsBasePath, {
-            withFileTypes: true,
-        })
-            .filter((dirent) => dirent.isDirectory())
-            .map((dirent) => dirent.name);
+  // First load all songs (needed for artist pages to show song details)
+  try {
+    const songsBasePath = resolve('./public/data/songs');
+    const songYearDirectories = readdirSync(songsBasePath, {
+      withFileTypes: true,
+    })
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) => dirent.name);
 
-        for (const year of songYearDirectories) {
-            try {
-                const yearPath = resolve(songsBasePath, year);
-                const songFiles = readdirSync(yearPath, { withFileTypes: true })
-                    .filter(
-                        (dirent) =>
-                            dirent.isFile() && dirent.name.endsWith('.json'),
-                    )
-                    .map((dirent) => dirent.name.replace('.json', ''));
+    for (const year of songYearDirectories) {
+      try {
+        const yearPath = resolve(songsBasePath, year);
+        const songFiles = readdirSync(yearPath, { withFileTypes: true })
+          .filter((dirent) => dirent.isFile() && dirent.name.endsWith('.json'))
+          .map((dirent) => dirent.name.replace('.json', ''));
 
-                for (const songId of songFiles) {
-                    try {
-                        const songPath = resolve(yearPath, `${songId}.json`);
-                        const songData = readFileSync(songPath, 'utf-8');
-                        const song: Song = JSON.parse(songData);
-                        songs.push(song);
-                    } catch (error) {
-                        console.warn(
-                            `Failed to load song ${songId} from year ${year}:`,
-                            error,
-                        );
-                    }
-                }
-            } catch (error) {
-                console.warn(
-                    `Failed to read song directory for year ${year}:`,
-                    error,
-                );
-            }
+        for (const songId of songFiles) {
+          try {
+            const songPath = resolve(yearPath, `${songId}.json`);
+            const songData = readFileSync(songPath, 'utf-8');
+            const song: Song = JSON.parse(songData);
+            songs.push(song);
+          } catch (error) {
+            console.warn(`Failed to load song ${songId} from year ${year}:`, error);
+          }
         }
-    } catch (error) {
-        console.warn('Failed to read songs base directory:', error);
+      } catch (error) {
+        console.warn(`Failed to read song directory for year ${year}:`, error);
+      }
     }
+  } catch (error) {
+    console.warn('Failed to read songs base directory:', error);
+  }
 
-    // Then load artists
-    try {
-        const artistsBasePath = resolve('./public/data/artists');
-        const artistYearDirectories = readdirSync(artistsBasePath, {
-            withFileTypes: true,
+  // Then load artists
+  try {
+    const artistsBasePath = resolve('./public/data/artists');
+    const artistYearDirectories = readdirSync(artistsBasePath, {
+      withFileTypes: true,
+    })
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) => dirent.name);
+
+    for (const year of artistYearDirectories) {
+      try {
+        const yearPath = resolve(artistsBasePath, year);
+        const artistFiles = readdirSync(yearPath, {
+          withFileTypes: true,
         })
-            .filter((dirent) => dirent.isDirectory())
-            .map((dirent) => dirent.name);
+          .filter((dirent) => dirent.isFile() && dirent.name.endsWith('.json'))
+          .map((dirent) => dirent.name.replace('.json', ''));
 
-        for (const year of artistYearDirectories) {
-            try {
-                const yearPath = resolve(artistsBasePath, year);
-                const artistFiles = readdirSync(yearPath, {
-                    withFileTypes: true,
-                })
-                    .filter(
-                        (dirent) =>
-                            dirent.isFile() && dirent.name.endsWith('.json'),
-                    )
-                    .map((dirent) => dirent.name.replace('.json', ''));
+        for (const artistId of artistFiles) {
+          try {
+            const artistPath = resolve(yearPath, `${artistId}.json`);
+            const artistData = readFileSync(artistPath, 'utf-8');
+            const artist: Artist = JSON.parse(artistData);
 
-                for (const artistId of artistFiles) {
-                    try {
-                        const artistPath = resolve(
-                            yearPath,
-                            `${artistId}.json`,
-                        );
-                        const artistData = readFileSync(artistPath, 'utf-8');
-                        const artist: Artist = JSON.parse(artistData);
+            // Get the artist's songs from the loaded songs
+            const artistSongs = songs.filter((song) => song.artists.includes(artist.id));
 
-                        // Get the artist's songs from the loaded songs
-                        const artistSongs = songs.filter((song) =>
-                            song.artists.includes(artist.id),
-                        );
-
-                        artists.push({
-                            ...artist,
-                            songs: artistSongs.map((song) => song.id),
-                            songCount: artistSongs.length,
-                        });
-                    } catch (error) {
-                        console.warn(
-                            `Failed to load artist ${artistId} from year ${year}:`,
-                            error,
-                        );
-                    }
-                }
-            } catch (error) {
-                console.warn(
-                    `Failed to read artist directory for year ${year}:`,
-                    error,
-                );
-            }
+            artists.push({
+              ...artist,
+              songs: artistSongs.map((song) => song.id),
+              songCount: artistSongs.length,
+            });
+          } catch (error) {
+            console.warn(`Failed to load artist ${artistId} from year ${year}:`, error);
+          }
         }
-    } catch (error) {
-        console.warn('Failed to read artists base directory:', error);
+      } catch (error) {
+        console.warn(`Failed to read artist directory for year ${year}:`, error);
+      }
     }
+  } catch (error) {
+    console.warn('Failed to read artists base directory:', error);
+  }
 
-    return artists.map((artist) => ({
-        params: { id: artist.id },
-        props: {
-            artist,
-            songs: songs.filter((song) => song.artists.includes(artist.id)),
-        },
-    }));
+  return artists.map((artist) => ({
+    params: { id: artist.id },
+    props: {
+      artist,
+      songs: songs.filter((song) => song.artists.includes(artist.id)),
+    },
+  }));
 }
 
 interface Props {
-    artist: Artist;
-    songs: Song[];
+  artist: Artist;
+  songs: Song[];
 }
 
 const { artist, songs } = Astro.props;
 
 // Generate title and description for SEO
-const artistName =
-    typeof artist.name === 'string' ? artist.name : artist.name.original;
+const artistName = typeof artist.name === 'string' ? artist.name : artist.name.original;
 const pageTitle = `${artistName} - Artist Profile`;
 const description = `Discover karaoke songs by ${artistName}. Find machine IDs for TJ, KY, and Joysound systems.`;
 
 // Generate structured data for SEO
 const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'MusicGroup',
-    name: artistName,
-    foundingDate: artist.debutDate,
-    genre: 'Popular Music',
-    additionalProperty: [
-        {
-            '@type': 'PropertyValue',
-            name: 'Song Count',
-            value: artist.songCount || songs.length,
-        },
-        {
-            '@type': 'PropertyValue',
-            name: 'Debut Date',
-            value: artist.debutDate,
-        },
-    ].filter((prop) => prop.value),
+  '@context': 'https://schema.org',
+  '@type': 'MusicGroup',
+  name: artistName,
+  foundingDate: artist.debutDate,
+  genre: 'Popular Music',
+  additionalProperty: [
+    {
+      '@type': 'PropertyValue',
+      name: 'Song Count',
+      value: artist.songCount || songs.length,
+    },
+    {
+      '@type': 'PropertyValue',
+      name: 'Debut Date',
+      value: artist.debutDate,
+    },
+  ].filter((prop) => prop.value),
 };
 ---
 
