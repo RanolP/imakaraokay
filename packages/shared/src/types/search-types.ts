@@ -1,5 +1,5 @@
 // Import TjResponse from utaitai
-import type { TjResponse } from '@imakaraokay/utaitai';
+import type { TjResponse, KyResponse } from '@imakaraokay/utaitai';
 
 export interface KaraokeResult {
   id: string;
@@ -11,6 +11,9 @@ export interface KaraokeResult {
   lyricist?: string;
   composer?: string;
   youtube?: string;
+  // Additional KY-specific fields
+  lyricCont?: string;
+  releaseDate?: string;
 }
 
 export interface LyricsResult {
@@ -64,5 +67,22 @@ export function tjResponseToKaraokeResult(tjResponse: TjResponse): KaraokeResult
     lyricist: tjResponse.lyricist,
     composer: tjResponse.composer,
     youtube: tjResponse.youtube,
+  };
+}
+
+/**
+ * Converts a KyResponse from utaitai to a KaraokeResult
+ */
+export function kyResponseToKaraokeResult(kyResponse: KyResponse): KaraokeResult {
+  return {
+    id: kyResponse.id.toString(),
+    title: kyResponse.title,
+    artist: kyResponse.singer,
+    source: 'KY' as const,
+    lyricist: kyResponse.lyricist,
+    composer: kyResponse.composer,
+    youtube: kyResponse.youtube,
+    lyricCont: kyResponse.lyricCont,
+    releaseDate: kyResponse.releaseDate,
   };
 }

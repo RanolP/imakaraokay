@@ -6,10 +6,10 @@ namespace Internal {
     TITLE: 2,
   });
 }
-export interface Options {
+export interface KySearchOptions {
   query: string;
 }
-export async function* searchKY({ query }: Options): AsyncGenerator<KyResponse> {
+export async function* searchKY({ query }: KySearchOptions): AsyncGenerator<KyResponse> {
   const url = new URL('https://kysing.kr/search/');
   url.searchParams.set('category', Internal.SearchCategory.TITLE.toString());
   url.searchParams.set('keyword', query);

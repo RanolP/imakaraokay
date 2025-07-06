@@ -18,10 +18,10 @@ namespace Internal {
   });
 }
 
-export interface Options {
+export interface TjSearchOptions {
   query: string;
 }
-export async function* searchTJ({ query }: Options): AsyncGenerator<TjResponse> {
+export async function* searchTJ({ query }: TjSearchOptions): AsyncGenerator<TjResponse> {
   const url = new URL(
     'https://www.tjmedia.com/song/accompaniment_search?pageNo=1&pageRowCnt=15&nationType=&strType=0&searchTxt=%EC%83%A4%EB%A5%BC'
   );
