@@ -3,20 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm -F website dev",
-    "build": "pnpm -F website build",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
     "preview": "pnpm -F website preview",
-    "build:all": "tsdown && pnpm -F website build",
-    "build:libs": "tsdown",
-    "dev:libs": "tsdown --watch",
-    "dev:all": "pnpm -r dev",
-    "clean": "pnpm -r clean && rm -rf node_modules",
+    "build:all": "turbo run build",
+    "build:libs": "turbo run build --filter=@imakaraokay/shared",
+    "dev:libs": "turbo run dev --filter=@imakaraokay/shared",
+    "dev:all": "turbo run dev",
+    "clean": "turbo run clean && rm -rf node_modules",
     "install:all": "pnpm install",
-    "lint": "pnpm -r lint",
-    "type-check": "pnpm -r type-check"
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check"
   },
   "devDependencies": {
-    "tsdown": "^0.12.9"
+    "tsdown": "^0.12.9",
+    "turbo": "^2.5.4"
   },
   "packageManager": "pnpm@9.0.0"
 }

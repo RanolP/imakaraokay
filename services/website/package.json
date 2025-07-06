@@ -10,6 +10,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "type-check": "astro check",
+    "lint": "echo 'No linting configured for website'",
     "clean": "rm -rf dist .astro"
   },
   "license": "MIT",
