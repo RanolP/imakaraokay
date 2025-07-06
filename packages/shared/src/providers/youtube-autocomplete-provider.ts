@@ -5,7 +5,7 @@ import { Logger } from '../utils/logger.js';
 export class YouTubeAutocompleteProvider implements AutocompleteProvider {
   name = 'YouTube Autocomplete';
 
-  constructor(private logger: Logger) {}
+  constructor(private logger: Logger) { }
 
   async getSuggestions(query: string): Promise<AutocompleteResult[]> {
     this.logger.log(`Getting YouTube autocomplete suggestions for: ${query}`);
