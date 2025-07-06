@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AdminInterface from '../components/admin-interface';
+
+// Only allow this page in development
+const isDev = import.meta.env.DEV;
+if (!isDev) {
+    return Astro.redirect('/404');
+}
+---
+
+<Layout
+    title="Admin - imakaraokay"
+    description="Admin interface for managing songs and artists"
+>
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-3xl font-bold text-gray-900">
+                    Admin Interface
+                </h1>
+                <div
+                    class="text-sm text-gray-500 bg-orange-100 px-3 py-1 rounded-full"
+                >
+                    Development Only
+                </div>
+            </div>
+
+            <!-- Admin Interface Component with client-side hydration -->
+            <AdminInterface client:load />
+        </div>
+    </div>
+</Layout>

@@ -1,7 +1,7 @@
 /// <reference types="astro/client" />
 import type { APIRoute } from 'astro';
 import type { Song } from '../../types/song';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { resolve, dirname } from 'path';
 
 // Only allow this endpoint in development
@@ -26,7 +26,6 @@ function getSongPath(songId: string, releaseYear?: string): string {
   // Search for the song in all year directories
   const songsBasePath = resolve('./public/data/songs');
   try {
-    const { readdirSync } = require('fs');
     const yearDirectories = readdirSync(songsBasePath, { withFileTypes: true })
       .filter((dirent: any) => dirent.isDirectory())
       .map((dirent: any) => dirent.name);
@@ -87,7 +86,6 @@ function deleteSong(songId: string): boolean {
       return false;
     }
     
-    const { unlinkSync } = require('fs');
     unlinkSync(songPath);
     return true;
   } catch (error) {
@@ -149,7 +147,6 @@ export const GET: APIRoute = async ({ url }) => {
       const songsBasePath = resolve('./public/data/songs');
       
       try {
-        const { readdirSync } = require('fs');
         const yearDirectories = readdirSync(songsBasePath, { withFileTypes: true })
           .filter((dirent: any) => dirent.isDirectory())
           .map((dirent: any) => dirent.name);
@@ -252,6 +249,14 @@ export const PUT: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ error: 'Song not found' }),
         { status: 404, headers: CORS_HEADERS }
+      );
+    }
+    
+    // Prevent ID changes - ensure the ID matches the existing song
+    if (song.id !== existingSong.id) {
+      return new Response(
+        JSON.stringify({ error: 'Song ID cannot be changed. ID must remain: ' + existingSong.id }),
+        { status: 400, headers: CORS_HEADERS }
       );
     }
     
