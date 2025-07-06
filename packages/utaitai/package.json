@@ -1,0 +1,33 @@
+{
+  "name": "@imakaraokay/utaitai",
+  "version": "1.0.0",
+  "description": "Utaitai library for imakaraokay",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "type-check": "tsc --noEmit",
+    "lint": "echo 'No linting configured for utaitai package'",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "keywords": [
+    "karaoke",
+    "utaitai",
+    "library"
+  ],
+  "author": "RanolP",
+  "license": "MIT"
+} 

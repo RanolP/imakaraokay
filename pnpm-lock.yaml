@@ -40,6 +40,15 @@ importers:
         specifier: ^5.7.2
         version: 5.8.3
 
+  packages/utaitai:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.15.34
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+
   services/website:
     dependencies:
       '@astrojs/node':
