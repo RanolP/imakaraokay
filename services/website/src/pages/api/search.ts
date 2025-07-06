@@ -9,12 +9,6 @@ import {
   SearchEngine,
 } from '@imakaraokay/shared';
 
-// Only allow this endpoint in development
-const isDev = process.env.NODE_ENV !== 'production';
-if (!isDev) {
-  throw new Error('API endpoints are only available in development mode');
-}
-
 interface SearchParams {
   query: string;
   providers?: string[];

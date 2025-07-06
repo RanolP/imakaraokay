@@ -1,12 +1,6 @@
 /// <reference types="astro/client" />
 import type { APIRoute } from 'astro';
 
-// Only allow this endpoint in development
-const isDev = process.env.NODE_ENV !== 'production';
-if (!isDev) {
-  throw new Error('API endpoints are only available in development mode');
-}
-
 export const GET: APIRoute = async ({ url }) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',

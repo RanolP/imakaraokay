@@ -4,12 +4,6 @@ import type { Song } from '../../types/song';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { resolve, dirname } from 'path';
 
-// Only allow this endpoint in development
-const isDev = process.env.NODE_ENV !== 'production';
-if (!isDev) {
-  throw new Error('API endpoints are only available in development mode');
-}
-
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',

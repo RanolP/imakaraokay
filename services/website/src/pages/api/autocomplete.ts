@@ -3,12 +3,6 @@ import type { APIRoute } from 'astro';
 import { SearchEngine } from '@imakaraokay/shared/search';
 import { YouTubeAutocompleteProvider, Logger } from '@imakaraokay/shared';
 
-// Only allow this endpoint in development
-const isDev = process.env.NODE_ENV !== 'production';
-if (!isDev) {
-  throw new Error('API endpoints are only available in development mode');
-}
-
 export const GET: APIRoute = async ({ url }) => {
   // CORS headers
   const headers = {
