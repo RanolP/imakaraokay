@@ -15,13 +15,24 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "type-check": "tsc --noEmit",
-    "lint": "echo 'No linting configured for utaitai package'",
-    "clean": "rm -rf dist"
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "format": "biome format src/",
+    "format:fix": "biome format --write src/",
+    "clean": "rm -rf dist",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run"
   },
-  "dependencies": {},
+  "dependencies": {
+    "cheerio": "^1.1.0",
+    "ky": "^1.8.1"
+  },
   "devDependencies": {
     "@types/node": "^22.10.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.6",
+    "@vitest/ui": "^2.1.6"
   },
   "keywords": [
     "karaoke",
@@ -30,4 +41,4 @@
   ],
   "author": "RanolP",
   "license": "MIT"
-} 
+}
