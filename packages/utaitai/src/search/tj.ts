@@ -1,5 +1,5 @@
-import ky from 'ky';
 import * as cheerio from 'cheerio';
+import ky from 'ky';
 
 namespace Internal {
   export const SearchType = Object.freeze({
